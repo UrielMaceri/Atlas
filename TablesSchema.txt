@@ -1,0 +1,35 @@
+Workspace{
+    Id: int autonumber
+    Name: Str
+    Description: Str
+}
+
+Category{
+    Id: int autonumber
+    Name: Str
+    Description: Str
+    WorkspaceId: int FK
+}
+
+Item{
+    Id: int autonumber
+    Name: Str
+    Description: Str
+    CategoryId: int FK NULLABLE
+    IsFavorite: bool 
+    Path: Str 
+    IconPath: Str
+}
+
+ItemTags{
+    ItemId: int PK FK
+    TagId: int PK FK
+}
+
+Tag{
+    Id: int autonumber
+    Name: Str
+    Description: Str
+    WorkspaceId: int
+    Color: Str //Possible hexadecimal code for the front to use later 
+}
