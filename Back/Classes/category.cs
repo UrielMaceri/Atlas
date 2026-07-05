@@ -4,5 +4,5 @@ public class Category : BaseEntity
 {
     public int WorkspaceId { get; set; }
     public Workspace? Workspace { get; set; }
-    public List<Item> Items { get; set; } = new();
+    public List<Item>? Items { get; set; } = new();
 }
