@@ -16,85 +16,109 @@ public class ItemRepo : IItem
 
     public List<Item> GetAll()
     {
-        return _context.Items.ToList();
+        return _context.Items
+            .Include(i => i.Category)
+            .Include(i => i.Tags)
+            .ToList();
     }
+
     public Item? GetById(int id)
     {
-        return _context.Items.Find(id);
+        return _context.Items
+            .Include(i => i.Category)
+            .Include(i => i.Tags)
+            .FirstOrDefault(i => i.Id == id);
     }
+
     public List<Item> GetByName(string name)
     {
         return _context.Items
-        .Where(i => i.Name.Contains(name))
-        .ToList();
+            .Include(i => i.Category)
+            .Include(i => i.Tags)
+            .Where(i => i.Name.Contains(name))
+            .ToList();
     }
+
     public void Insert(Item item)
     {
         _context.Items.Add(item);
         _context.SaveChanges();
     }
+
     public void Update(Item item)
     {
         _context.Items.Update(item);
         _context.SaveChanges();
     }
+
     public void Delete(int id)
     {
-        var ItemToDelete = _context.Items.Find(id);
+        var itemToDelete = _context.Items.Find(id);
 
-        if (ItemToDelete == null){
+        if (itemToDelete == null)
+        {
             throw new Exception($"Item {id} not found.");
         }
-        else
-        {
-            _context.Items.Remove(ItemToDelete);
-            _context.SaveChanges();
-        }
+
+        _context.Items.Remove(itemToDelete);
+        _context.SaveChanges();
     }
+
     public List<Item> GetByCategory(int categoryId)
     {
         return _context.Items
-        .Where(i => i.CategoryId.Equals(categoryId))
-        .ToList();
+            .Include(i => i.Category)
+            .Include(i => i.Tags)
+            .Where(i => i.CategoryId == categoryId)
+            .ToList();
     }
+
     public List<Item> GetFavs()
     {
         return _context.Items
-        .Where(i => i.IsFavorite.Equals(true))
-        .ToList();
+            .Include(i => i.Category)
+            .Include(i => i.Tags)
+            .Where(i => i.IsFavorite)
+            .ToList();
     }
-    
-    // ItemTags join table
+
     public List<Item> GetByTag(int tagId)
     {
-        return _context.Tags
-        .Where(t => t.Id == tagId)
-        .SelectMany(i => i.Items)
-        .ToList();
+        return _context.Items
+            .Include(i => i.Category)
+            .Include(i => i.Tags)
+            .Where(i => i.Tags.Any(t => t.Id == tagId))
+            .ToList();
     }
+
     public List<Tag> GetTagsByItem(int itemId)
     {
         return _context.Items
-        .Where(i => i.Id == itemId)
-        .SelectMany(t => t.Tags)
-        .ToList();
+            .Include(i => i.Tags)
+            .Where(i => i.Id == itemId)
+            .SelectMany(i => i.Tags)
+            .ToList();
     }
+
     public void UpdateItemTags(Item item)
     {
-        var ItemTags = _context.Items.Include(i =>i.Tags)
-                                .SingleOrDefault(i => i.Id == item.Id);
+        var itemTags = _context.Items
+            .Include(i => i.Tags)
+            .SingleOrDefault(i => i.Id == item.Id);
 
-        if (ItemTags == null)
+        if (itemTags == null)
             throw new Exception($"Item {item.Id} not found.");
 
-        ItemTags.Tags.Clear();
-        // Only saves in join table if there i
-        if (item.Tags != null){
+        itemTags.Tags.Clear();
+
+        if (item.Tags != null)
+        {
             foreach (var tag in item.Tags)
             {
-                ItemTags.Tags.Add(tag);
+                itemTags.Tags.Add(tag);
             }
+
             _context.SaveChanges();
-        } 
+        }
     }
 }

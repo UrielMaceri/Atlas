@@ -16,39 +16,51 @@ public class WorkspaceRepo : IWorkspace
 
     public List<Workspace> GetAll()
     {
-        return _context.Workspaces.ToList();
+        return _context.Workspaces
+            .Include(w => w.Categories)
+            .Include(w => w.Tags)
+            .ToList();
     }
+
     public Workspace? GetById(int id)
     {
-        return _context.Workspaces.Find(id);
+        return _context.Workspaces
+            .Include(w => w.Categories)
+            .Include(w => w.Tags)
+            .FirstOrDefault(w => w.Id == id);
     }
+
     public List<Workspace> GetByName(string name)
     {
         return _context.Workspaces
-        .Where(w => w.Name.Contains(name))
-        .ToList();
+            .Include(w => w.Categories)
+            .Include(w => w.Tags)
+            .Where(w => w.Name.Contains(name))
+            .ToList();
     }
+
     public void Insert(Workspace workspace)
     {
         _context.Workspaces.Add(workspace);
         _context.SaveChanges();
     }
+
     public void Update(Workspace workspace)
     {
         _context.Workspaces.Update(workspace);
         _context.SaveChanges();
     }
+
     public void Delete(int id)
     {
         var workspaceToDelete = _context.Workspaces.Find(id);
 
-        if (workspaceToDelete == null){
+        if (workspaceToDelete == null)
+        {
             throw new Exception($"Workspace {id} not found.");
         }
-        else
-        {
-            _context.Workspaces.Remove(workspaceToDelete);
-            _context.SaveChanges();
-        }
+
+        _context.Workspaces.Remove(workspaceToDelete);
+        _context.SaveChanges();
     }
 }

@@ -16,39 +16,51 @@ public class TagRepo : ITag
 
     public List<Tag> GetAll()
     {
-        return _context.Tags.ToList();
+        return _context.Tags
+            .Include(t => t.Items)
+            .Include(t => t.Workspace)
+            .ToList();
     }
+
     public Tag? GetById(int id)
     {
-        return _context.Tags.Find(id);
+        return _context.Tags
+            .Include(t => t.Items)
+            .Include(t => t.Workspace)
+            .FirstOrDefault(t => t.Id == id);
     }
+
     public List<Tag> GetByName(string name)
     {
         return _context.Tags
-        .Where(t => t.Name.Contains(name))
-        .ToList();
+            .Include(t => t.Items)
+            .Include(t => t.Workspace)
+            .Where(t => t.Name.Contains(name))
+            .ToList();
     }
+
     public void Insert(Tag tag)
     {
         _context.Tags.Add(tag);
         _context.SaveChanges();
     }
+
     public void Update(Tag tag)
     {
         _context.Tags.Update(tag);
         _context.SaveChanges();
     }
+
     public void Delete(int id)
     {
-        var TagToDelete = _context.Tags.Find(id);
+        var tagToDelete = _context.Tags.Find(id);
 
-        if (TagToDelete == null){
+        if (tagToDelete == null)
+        {
             throw new Exception($"Tag {id} not found.");
         }
-        else
-        {
-            _context.Tags.Remove(TagToDelete);
-            _context.SaveChanges();
-        }
+
+        _context.Tags.Remove(tagToDelete);
+        _context.SaveChanges();
     }
 }
