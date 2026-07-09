@@ -167,5 +167,6 @@ public class ItemService
              throw new ArgumentException("Selected tag does not exist in the database.",nameof(itemId));
 
         updateItem.Tags.RemoveAll(t => t.Id == removingTag.Id);
+        _itemRepository.UpdateItemTags(updateItem);
     }
 }
