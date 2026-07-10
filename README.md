@@ -8,22 +8,13 @@
 
 Atlas is a personal productivity app designed to help you manage digital resources in a clean, flexible, and intuitive way. Instead of relying only on traditional folder structures, Atlas lets you create custom categories, enrich items with tags, pin favorites, and browse everything through search and smart views while keeping your files in their original locations.
 
-## Why Atlas?
-
-- Keep your files where they already are
-- Organize resources through categories and tags instead of rigid folders
-- Open anything instantly from a modern desktop experience
-- Build a personal knowledge and resource library that stays lightweight and local
-
 ## Core Features
 
 - Unlimited categories with support for empty categories
-- Drag and drop support for folders, files, shortcuts, and executables
+- Drag and drop support for files, shortcuts, and executables
 - Native file icons and contextual actions
 - Instant search and filtered browsing
-- Favorites, pinned items, recent items, and usage statistics
-- Import and export support with automatic backups
-- Broken path detection and theme support
+- Favorites, and other "Smart-Tags" (predefined)
 - Compatible with Windows and Linux
 
 ## Application Flow
@@ -54,48 +45,31 @@ Atlas is a personal productivity app designed to help you manage digital resourc
 - Tag
 - Workspace
 
-### Services
-- CategoryService
-- ItemService
-- IconService
-- SearchService
-- WorkspaceService
-- SettingsService
-
 ### ViewModels
 - MainWindowViewModel
 - CategoryViewModel
 - ItemViewModel
 
 ## Relationships
-
 - Workspace has many Categories
 - Category has many Items
 - Item has many Tags
 
-## Smart Categories
-
+## Smart Categories (Possible)
 - Favorites
-- Recent
-- Most Used
 - Broken Links
-- By Tag
 - By File Type
-- User-defined filters
 
 ## Item Actions
-
 - Open
 - Open file location
 - Move to category
 - Rename within Atlas
 - Add or remove tags
 - Add or remove favorites
-- Pin or unpin
-- Remove from library
+- Remove from workspace
 
 ## Category Rules
-
 - Categories may remain empty
 - Categories containing items cannot be deleted
 - Uncategorized always exists
@@ -103,11 +77,9 @@ Atlas is a personal productivity app designed to help you manage digital resourc
 - Items may have multiple tags
 
 ## Roadmap
-
 - 0.x — Core development and architecture iteration
 - 1.x — Daily-use polish, quality-of-life improvements, and new features
 - 2.0 — Full feature-complete vision for the original design
 
 ## Project Status
-
 Atlas is currently in active development and is being shaped around a practical, personal-library workflow.
