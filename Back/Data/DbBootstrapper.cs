@@ -1,12 +1,12 @@
-﻿using System;
-using Back.Classes;
-using Back.Data;
+using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
-namespace Back.Main;
 
-class MainApp
+namespace Back.Data;
+
+public static class DbBootstrapper
 {
-    static void Main(string[] args)
+    public static AtlasDbContext CreateAndMigrate()
     {
         //Searching for the local appdata folder and creates the db there 
         string AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -19,7 +19,7 @@ class MainApp
         .UseSqlite($"Data Source={DbPath}")
         .Options;
         using var db = new AtlasDbContext(options);
-
-        
+        db.Database.Migrate(); 
+        return db;
     }
 }
