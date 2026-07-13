@@ -1,0 +1,40 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style Selector="TextBlock.page-title">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="Border.panel-card">
+        <Setter Property="Background" Value="#000000" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="BorderBrush" Value="#ffffff" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="TextBlock.section-title">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="Button.action-button">
+        <Setter Property="Padding" Value="12,6" />
+    </Style>
+
+    <Style Selector="Border.content-card">
+        <Setter Property="Background" Value="#424242" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="#424242" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinHeight" Value="220" />
+    </Style>
+
+    <Style Selector="TextBlock.empty-state">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="#777777" />
+    </Style>
+
+</Styles>

@@ -6,5 +6,6 @@
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://Atlas/Styles/General.axaml" />
     </Application.Styles>
 </Application>

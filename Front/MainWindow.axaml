@@ -4,6 +4,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Front.MainWindow"
-        Title="Front">
-    Welcome to Avalonia!
+        Title="Atlas"
+        Width="900" Height="600">
+        <!-- Icon="avares://Front/Assets/icon.png" -->
+    <Grid RowDefinitions="Auto,*" Margin="24">
+        <TextBlock Classes="page-title"
+                   Text="This is Atlas"
+                   Margin="0,0,0,20"/>
+
+        <Border Classes="panel-card"
+                Grid.Row="1">
+            <Grid RowDefinitions="Auto,*">
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+                    <TextBlock Classes="section-title"
+                               Text="Workspaces"/>
+                    <Button Classes="action-button"
+                            Content="+ New"
+                            Grid.Column="1"/>
+                </Grid>
+
+                <Border Classes="content-card"
+                        Grid.Row="1">
+                    <TextBlock Classes="empty-state"
+                               Text="No Workspaces yet."/>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>
