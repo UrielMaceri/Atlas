@@ -9,16 +9,16 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAtlasBackServices(this IServiceCollection services)
     {
-        // DbContext ya migrado, una sola instancia para toda la app
+        // DbContext
         services.AddSingleton(_ => DbBootstrapper.CreateAndMigrate());
 
-        // Repos (internal, nadie fuera de Back los ve)
+        // Repos
         services.AddScoped<IItem, ItemRepo>();
         services.AddScoped<ITag, TagRepo>();
         services.AddScoped<ICategory, CategoryRepo>();
         services.AddScoped<IWorkspace, WorkspaceRepo>();
 
-        // Services (públicos, esto es lo que Front va a pedir)
+        // Services
         services.AddScoped<ItemService>();
         services.AddScoped<TagService>();
         services.AddScoped<CategoryService>();
