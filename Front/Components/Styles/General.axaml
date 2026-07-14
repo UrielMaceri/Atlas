@@ -37,4 +37,40 @@
         <Setter Property="Foreground" Value="#777777" />
     </Style>
 
+    <!-- Workspace card in Home -->
+    <Style Selector="Border.workspace-card">
+        <Setter Property="Background" Value="#2a2a2a" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="BorderBrush" Value="#3a3a3a" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.workspace-card:pointerover">
+        <Setter Property="Background" Value="#333333" />
+        <Setter Property="BorderBrush" Value="#555555" />
+    </Style>
+
+    <!-- TabControl win11 style -->
+    <Style Selector="TabControl">
+        <Setter Property="Background" Value="#1a1a1a" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="TabItem">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="Foreground" Value="#aaaaaa" />
+        <Setter Property="Background" Value="Transparent" />
+        <!-- <Setter Property="CornerRadius" Value="8,8,0,0" /> -->
+    </Style>
+
+    <Style Selector="TabItem:selected">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#2a2a2a" />
+    </Style>
+
+    <Style Selector="TabItem:pointerover">
+        <Setter Property="Foreground" Value="#dddddd" />
+        <Setter Property="Background" Value="#222222" />
+    </Style>
+
 </Styles>

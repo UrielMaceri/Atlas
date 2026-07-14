@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Front"
+             x:Class="Front.HomeView"
+             x:DataType="local:HomeViewModel">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="20">
+
+            <TextBlock Classes="page-title" Text="Home" />
+
+            <!-- Empty state -->
+            <TextBlock Classes="empty-state"
+                       Text="No workspaces yet. Create one to get started."
+                       IsVisible="{Binding Workspaces.Count, Converter={x:Static local:CountToBoolConverter.Instance}, ConverterParameter=empty}" />
+
+            <!-- Workspace cards grid -->
+            <ItemsControl ItemsSource="{Binding Workspaces}"
+                          IsVisible="{Binding Workspaces.Count, Converter={x:Static local:CountToBoolConverter.Instance}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Classes="workspace-card"
+                                Margin="0,0,12,12"
+                                Width="180" Height="120"
+                                Cursor="Hand">
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Spacing="6">
+                                <TextBlock Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center" />
+                                <TextBlock Text="{Binding Description}"
+                                           FontSize="12"
+                                           Foreground="#999999"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
+                                           MaxWidth="160" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

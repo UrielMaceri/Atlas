@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Front"
+        x:Class="Front.MainWindow"
+        Title="Atlas"
+        Width="1100" Height="700"
+        MinWidth="700" MinHeight="450"
+        Background="#000000">
+
+    <TabControl x:Name="MainTabs"
+                TabStripPlacement="Top">
+
+        <!-- ── Home tab (static) ── -->
+        <TabItem>
+            <TabItem.Header>
+                <!-- PathIcon done by Gemini -->
+                <PathIcon Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" 
+                          Width="16" 
+                          Height="16" 
+                          Foreground="White"/>
+            </TabItem.Header>
+            
+            <local:HomeView />
+        </TabItem>
+
+        <!-- workspaces tabs will be updated in code -->
+
+    </TabControl>
+
+</Window>
