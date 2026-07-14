@@ -13,16 +13,16 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(_ => DbBootstrapper.CreateAndMigrate());
 
         // Repos
-        services.AddScoped<IItem, ItemRepo>();
-        services.AddScoped<ITag, TagRepo>();
-        services.AddScoped<ICategory, CategoryRepo>();
-        services.AddScoped<IWorkspace, WorkspaceRepo>();
+        services.AddSingleton<IItem, ItemRepo>();
+        services.AddSingleton<ITag, TagRepo>();
+        services.AddSingleton<ICategory, CategoryRepo>();
+        services.AddSingleton<IWorkspace, WorkspaceRepo>();
 
         // Services
-        services.AddScoped<ItemService>();
-        services.AddScoped<TagService>();
-        services.AddScoped<CategoryService>();
-        services.AddScoped<WorkspaceService>();
+        services.AddSingleton<ItemService>();
+        services.AddSingleton<TagService>();
+        services.AddSingleton<CategoryService>();
+        services.AddSingleton<WorkspaceService>();
 
         return services;
     }

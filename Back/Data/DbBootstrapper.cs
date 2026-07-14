@@ -18,7 +18,7 @@ public static class DbBootstrapper
         var options = new DbContextOptionsBuilder<AtlasDbContext>()
         .UseSqlite($"Data Source={DbPath}")
         .Options;
-        using var db = new AtlasDbContext(options);
+        var db = new AtlasDbContext(options);
         db.Database.Migrate(); 
         return db;
     }
