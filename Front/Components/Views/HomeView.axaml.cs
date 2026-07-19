@@ -7,6 +7,6 @@ public partial class HomeView : UserControl
     public HomeView()
     {
         InitializeComponent();
-        DataContext = new HomeViewModel();
+        // DataContext is set externally by MainWindowViewModel via HomeTabSentinel
     }
 }

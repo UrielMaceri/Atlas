@@ -2,29 +2,107 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Front"
         x:Class="Front.MainWindow"
+        x:DataType="local:MainWindowViewModel"
         Title="Atlas"
         Width="1100" Height="700"
         MinWidth="700" MinHeight="450"
-        Background="#000000">
+        Background="#1a1a1a">
 
-    <TabControl x:Name="MainTabs"
-                TabStripPlacement="Top">
+    <DockPanel>
 
-        <!-- ── Home tab (static) ── -->
-        <TabItem>
-            <TabItem.Header>
-                <!-- PathIcon done by Gemini -->
-                <PathIcon Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" 
-                          Width="16" 
-                          Height="16" 
-                          Foreground="White"/>
-            </TabItem.Header>
-            
-            <local:HomeView />
-        </TabItem>
+        <!-- ── Custom tab strip ── -->
+        <Border DockPanel.Dock="Top"
+                Background="#111111"
+                BorderBrush="#2a2a2a"
+                BorderThickness="0,0,0,1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled">
+                <StackPanel Orientation="Horizontal" Spacing="2" Margin="4,4,4,0">
 
-        <!-- workspaces tabs will be updated in code -->
+                    <!-- Home tab (static, no close button) -->
+                    <Button Classes="tab-btn"
+                            Classes.tab-selected="{Binding SelectedTab, Converter={x:Static local:IsTypeConverter.HomeTab}}"
+                            Command="{Binding SelectHomeCommand}">
+                        <PathIcon Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"
+                                  Width="14" Height="14"
+                                  Foreground="White"/>
+                    </Button>
 
-    </TabControl>
+                    <!-- Workspace tabs -->
+                    <ItemsControl ItemsSource="{Binding WorkspaceTabs}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="2"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:WorkspaceTabViewModel">
+                                <Border Classes="tab-container"
+                                        Classes.tab-selected="{Binding IsSelected}">
+                                    <Panel>
+                                        <!-- Normal view: name + close -->
+                                        <StackPanel Orientation="Horizontal" Spacing="4"
+                                                    IsVisible="{Binding !IsEditingName}">
+                                            <Button Classes="tab-btn tab-title-btn"
+                                                    Content="{Binding Name}"
+                                                    Command="{Binding SelectCommand}"/>
+                                            <Button Classes="tab-close-btn"
+                                                    Content="×"
+                                                    Command="{Binding CloseCommand}"/>
+                                        </StackPanel>
+
+                                        <!-- Rename mode -->
+                                        <TextBox Classes="tab-rename-box"
+                                                 Text="{Binding EditingName}"
+                                                 IsVisible="{Binding IsEditingName}"
+                                                 MinWidth="80"/>
+                                    </Panel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- + button -->
+                    <Button Classes="tab-add-btn"
+                            Content="+"
+                            Command="{Binding AddNewWorkspaceCommand}"
+                            ToolTip.Tip="New workspace"/>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- ── Tab content ── -->
+        <Panel>
+
+            <!-- Home content -->
+            <ContentControl Content="{Binding HomeTab.ViewModel}"
+                            IsVisible="{Binding SelectedTab, Converter={x:Static local:IsTypeConverter.HomeTab}}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate x:DataType="local:HomeViewModel">
+                        <local:HomeView DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+
+            <!-- Workspace content -->
+            <ItemsControl ItemsSource="{Binding WorkspaceTabs}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Panel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:WorkspaceTabViewModel">
+                        <ContentControl IsVisible="{Binding IsSelected}">
+                            <local:WorkspaceView DataContext="{Binding}"/>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </Panel>
+
+    </DockPanel>
 
 </Window>

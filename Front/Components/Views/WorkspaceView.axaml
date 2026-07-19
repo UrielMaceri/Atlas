@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Front"
+             x:Class="Front.WorkspaceView"
+             x:DataType="local:WorkspaceTabViewModel">
+
+    <DockPanel>
+
+        <!-- Workspace header bar -->
+        <Border DockPanel.Dock="Top"
+                Background="#181818"
+                BorderBrush="#2a2a2a"
+                BorderThickness="0,0,0,1"
+                Padding="20,12">
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+
+                <!-- Normal: name + rename button -->
+                <TextBlock Text="{Binding Name}"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding !IsEditingName}"/>
+                <Button Classes="icon-btn"
+                        ToolTip.Tip="Rename"
+                        Command="{Binding BeginRenameCommand}"
+                        IsVisible="{Binding !IsEditingName}">
+                    <!-- Pencil icon -->
+                    <PathIcon Data="M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25M20.71,7.04A1,1 0 0,0 20.71,5.63L18.37,3.29A1,1 0 0,0 16.96,3.29L15.12,5.12L18.87,8.87L20.71,7.04Z"
+                              Width="14" Height="14"/>
+                </Button>
+
+                <!-- Editing: textbox + confirm/cancel -->
+                <TextBox Text="{Binding EditingName}"
+                         Classes="inline-rename"
+                         MinWidth="160"
+                         IsVisible="{Binding IsEditingName}"/>
+                <Button Classes="action-button"
+                        Content="✓"
+                        Command="{Binding CommitRenameCommand}"
+                        IsVisible="{Binding IsEditingName}"/>
+                <Button Classes="action-button"
+                        Content="✕"
+                        Command="{Binding CancelRenameCommand}"
+                        IsVisible="{Binding IsEditingName}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content area (placeholder) -->
+        <Grid>
+            <TextBlock Classes="empty-state"
+                       Text="Workspace content coming soon."
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Grid>
+
+    </DockPanel>
+
+</UserControl>

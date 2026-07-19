@@ -7,44 +7,119 @@
     <ScrollViewer Padding="24">
         <StackPanel Spacing="20">
 
-            <TextBlock Classes="page-title" Text="Home" />
+            <TextBlock Classes="page-title" Text="Workspaces" />
 
             <!-- Empty state -->
             <TextBlock Classes="empty-state"
-                       Text="No workspaces yet. Create one to get started."
-                       IsVisible="{Binding Workspaces.Count, Converter={x:Static local:CountToBoolConverter.Instance}, ConverterParameter=empty}" />
+                       Text="No workspaces yet. Click + to create one."
+                       IsVisible="{Binding Workspaces.Count,
+                           Converter={x:Static local:CountToBoolConverter.Instance},
+                           ConverterParameter=empty}" />
 
-            <!-- Workspace cards grid -->
+            <!-- Workspace cards -->
             <ItemsControl ItemsSource="{Binding Workspaces}"
-                          IsVisible="{Binding Workspaces.Count, Converter={x:Static local:CountToBoolConverter.Instance}}">
+                          IsVisible="{Binding Workspaces.Count,
+                              Converter={x:Static local:CountToBoolConverter.Instance}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
+                        <WrapPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="local:WorkspaceCardViewModel">
                         <Border Classes="workspace-card"
                                 Margin="0,0,12,12"
-                                Width="180" Height="120"
-                                Cursor="Hand">
-                            <StackPanel VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        Spacing="6">
-                                <TextBlock Text="{Binding Name}"
-                                           FontSize="16"
-                                           FontWeight="SemiBold"
-                                           HorizontalAlignment="Center"
-                                           TextWrapping="Wrap"
-                                           TextAlignment="Center" />
-                                <TextBlock Text="{Binding Description}"
-                                           FontSize="12"
-                                           Foreground="#999999"
-                                           HorizontalAlignment="Center"
-                                           TextWrapping="Wrap"
-                                           TextAlignment="Center"
-                                           MaxWidth="160" />
-                            </StackPanel>
+                                Width="300" Height="210">
+                            <Panel>
+                                <!-- Normal view -->
+                                <Grid IsVisible="{Binding !IsEditing}" RowDefinitions="*,Auto">
+
+                                <!-- Click area to open -->
+                                <Button Grid.Row="0"
+                                        Classes="card-open-btn"
+                                        Command="{Binding OpenCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <StackPanel VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Spacing="6">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontSize="16"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center"/>
+                                        <TextBlock Text="{Binding Description}"
+                                                   FontSize="12"
+                                                   Foreground="#999999"
+                                                   HorizontalAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center"
+                                                   MaxWidth="170"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Action bar -->
+                                <StackPanel Grid.Row="1"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            Spacing="4"
+                                            Margin="6,0,6,6">
+                                    <Button Classes="icon-btn"
+                                            ToolTip.Tip="Edit"
+                                            Command="{Binding BeginEditCommand}">
+                                        <PathIcon Data="M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25M20.71,7.04A1,1 0 0,0 20.71,5.63L18.37,3.29A1,1 0 0,0 16.96,3.29L15.12,5.12L18.87,8.87L20.71,7.04Z"
+                                                  Width="13" Height="13"/>
+                                    </Button>
+                                    <Button Classes="icon-btn danger-btn"
+                                            ToolTip.Tip="Delete"
+                                            Command="{Binding DeleteCommand}">
+                                        <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                                                  Width="13" Height="13"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Edit view -->
+                            <Grid IsVisible="{Binding IsEditing}"
+                                  RowDefinitions="*,Auto"
+                                  Margin="10">
+                                <!-- Fields -->
+                                <Grid Grid.Row="0"
+                                      RowDefinitions="Auto,Auto,Auto,*"
+                                      RowSpacing="6">
+                                    <TextBlock Grid.Row="0" Text="Name" FontSize="11" Foreground="#777777"/>
+                                    <TextBox Grid.Row="1"
+                                             Text="{Binding EditingName}"
+                                             Classes="card-input"
+                                             PlaceholderText="Workspace name"/>
+                                    <TextBlock Grid.Row="2" Text="Description" FontSize="11" Foreground="#777777"/>
+                                    <TextBox Grid.Row="3"
+                                             Text="{Binding EditingDescription}"
+                                             Classes="card-input"
+                                             PlaceholderText="Optional description"
+                                             AcceptsReturn="True"
+                                             TextWrapping="Wrap"
+                                             VerticalContentAlignment="Top"/>
+                                </Grid>
+
+                                <!-- Buttons pinned to bottom -->
+                                <StackPanel Grid.Row="1"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,5,0,0">
+                                    <Button Classes="action-button"
+                                            Content="Save"
+                                            Command="{Binding CommitEditCommand}"/>
+                                    <Button Classes="action-button"
+                                            Content="Cancel"
+                                            Command="{Binding CancelEditCommand}"/>
+                                </StackPanel>
+                            </Grid>
+                            </Panel>
+
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
