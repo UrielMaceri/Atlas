@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace Front;
 
 /// <summary>
-/// Simple synchronous ICommand implementation. No scheduler magic, no deadlocks.
+/// Simple synchronous ICommand implementation.
 /// </summary>
 public sealed class RelayCommand : ICommand
 {

@@ -36,6 +36,8 @@ public class MainWindowViewModel : ReactiveObject
 
     public MainWindowViewModel()
     {
+        var service = App.Services.GetRequiredService<WorkspaceService>();
+        service.WorkspaceDeleted += OnWorkspaceDeleted;
         HomeTab = new HomeTabSentinel();
         HomeTab.ViewModel.OpenWorkspaceAction = OpenWorkspace;
 
@@ -85,6 +87,7 @@ public class MainWindowViewModel : ReactiveObject
         var workspace = service.Create("New Workspace", string.Empty);
 
         var tab = BuildTab(workspace);
+        tab.IsNew = true;
         WorkspaceTabs.Add(tab);
         SelectTab(tab);
 
@@ -116,6 +119,13 @@ public class MainWindowViewModel : ReactiveObject
         tab.SelectCommand = new RelayCommand(() => SelectTab(tab));
         return tab;
     }
+    
+    private void OnWorkspaceDeleted(int id)
+{
+    var tab = WorkspaceTabs.FirstOrDefault(t => t.Workspace.Id == id);
+    if (tab != null)
+        CloseTab(tab);
+}
 }
 
 /// <summary>Marker for the static Home tab.</summary>

@@ -121,7 +121,7 @@ public class WorkspaceCardViewModel : ReactiveObject
         {
             var service = App.Services.GetRequiredService<WorkspaceService>();
             service.Delete(Workspace.Id);
-            _parent.RemoveCard(this);
+            _parent.RemoveCard(this);           
         });
     }
 }

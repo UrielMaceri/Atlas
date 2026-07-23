@@ -13,6 +13,7 @@ public class WorkspaceTabViewModel : ReactiveObject
     private bool _isSelected;
     private bool _isEditingName;
     private string _editingName = string.Empty;
+    private bool _isNew;
 
     public Workspace Workspace { get; }
 
@@ -38,6 +39,12 @@ public class WorkspaceTabViewModel : ReactiveObject
     {
         get => _editingName;
         set => this.RaiseAndSetIfChanged(ref _editingName, value);
+    }
+
+    public bool IsNew
+    {
+        get => _isNew;
+        set => this.RaiseAndSetIfChanged(ref _isNew, value);
     }
 
     // Wired by MainWindowViewModel after construction
@@ -72,11 +79,19 @@ public class WorkspaceTabViewModel : ReactiveObject
             Workspace.Name = trimmed;
             Name = trimmed;
             IsEditingName = false;
+            IsNew = false;
         });
 
         CancelRenameCommand = new RelayCommand(() =>
         {
             IsEditingName = false;
+            if (IsNew)
+            {
+                var service = App.Services.GetRequiredService<WorkspaceService>();
+                service.Delete(Workspace.Id);
+                CloseCommand.Execute(null);
+            }
+            
         });
     }
 }

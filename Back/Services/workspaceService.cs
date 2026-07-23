@@ -68,6 +68,7 @@ public class WorkspaceService
         _workspaceRepository.Update(workspace);
     }
 
+    public event Action<int>? WorkspaceDeleted; //Event for tab closure upon delete
     public void Delete(int id)
     {
         if (id <= 0)
@@ -77,6 +78,9 @@ public class WorkspaceService
         if (workspace == null)
             throw new KeyNotFoundException($"Workspace with id {id} was not found.");
 
+        WorkspaceDeleted?.Invoke(id);
         _workspaceRepository.Delete(id);
     }
+
+    
 }
