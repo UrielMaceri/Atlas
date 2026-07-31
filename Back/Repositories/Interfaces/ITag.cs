@@ -11,6 +11,7 @@ public interface ITag
     List<Tag> GetAll();
     Tag? GetById(int id);
     List<Tag>? GetByName(string name);
+    List<Tag>? GetByWorkspace(int workspaceId);
     void Insert(Tag tag);
     void Update(Tag tag);
     void Delete(int id);

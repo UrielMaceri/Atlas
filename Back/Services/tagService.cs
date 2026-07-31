@@ -35,6 +35,14 @@ public class TagService
         return _tagRepository.GetByName(searchTerm.Trim()) ?? new List<Tag>();
     }
 
+    public List<Tag> GetByWorkspace(int workspaceId)
+    {
+        if (workspaceId <= 0)
+            throw new ArgumentException("The workspace id must be greater than zero.", nameof(workspaceId));
+
+        return _tagRepository.GetByWorkspace(workspaceId) ?? new List<Tag>();
+    }
+
     public Tag Create(string name, string description, int workspaceId, string color)
     {
         if (string.IsNullOrWhiteSpace(name))

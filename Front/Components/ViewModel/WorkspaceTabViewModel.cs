@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Avalonia.Metadata;
 using Back.Classes;
 using Back.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +19,9 @@ public class WorkspaceTabViewModel : ReactiveObject
     private bool _isNew;
 
     public Workspace Workspace { get; }
+    
+    public ObservableCollection<CategoryViewModel> Categories { get; } = new();
+    public ObservableCollection<TagViewModel> Tags { get; } = new();
 
     public string Name
     {
@@ -56,10 +62,37 @@ public class WorkspaceTabViewModel : ReactiveObject
     public ICommand CommitRenameCommand { get; }
     public ICommand CancelRenameCommand { get; }
 
+    public ObservableCollection<CategoryViewModel> LoadCategories(int workspaceId)
+    {
+        var service = App.Services.GetRequiredService<CategoryService>();
+
+        var CategoriesInWorkspace = service.GetByWorkspace(workspaceId);
+
+        Categories.Clear();
+        foreach (var cat in CategoriesInWorkspace)
+            Categories.Add(new CategoryViewModel(cat, this));
+        return Categories;
+    }
+
+    public ObservableCollection<TagViewModel> LoadTags(int workspaceId)
+    {
+        var service = App.Services.GetRequiredService<TagService>();
+
+        var TagsInWorkspace = service.GetByWorkspace(workspaceId);
+
+        Tags.Clear();
+        foreach (var tag in TagsInWorkspace)
+            Tags.Add(new TagViewModel(tag, this));
+        return Tags;
+    }
+
     public WorkspaceTabViewModel(Workspace workspace)
     {
         Workspace = workspace;
         _name = workspace.Name;
+
+        LoadCategories(Workspace.Id);
+        LoadTags(Workspace.Id);
 
         CloseCommand = new RelayCommand(() => RequestClose?.Invoke(this));
 

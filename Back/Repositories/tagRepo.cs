@@ -39,6 +39,15 @@ public class TagRepo : ITag
             .ToList();
     }
 
+    public List<Tag> GetByWorkspace(int workspaceId)
+    {
+        return _context.Tags
+            .Include(t => t.Items)
+            .Include(t => t.Workspace)
+            .Where(t => t.WorkspaceId == workspaceId)
+            .ToList();
+    }
+
     public void Insert(Tag tag)
     {
         _context.Tags.Add(tag);
