@@ -9,14 +9,35 @@ namespace Front;
 
 public class CategoryViewModel : ReactiveObject
 {
-    public Category Category { get; }
-    private readonly WorkspaceTabViewModel _parent;
     private string _name;
-    public string Name{
+    private bool _isEditingName;
+    private string _editingName = string.Empty;
+
+    public string Name
+    {
         get => _name;
         private set => this.RaiseAndSetIfChanged(ref _name, value);
     }
 
+    public bool IsEditingName
+    {
+        get => _isEditingName;
+        set => this.RaiseAndSetIfChanged(ref _isEditingName, value);
+    }
+
+    public string EditingName
+    {
+        get => _editingName;
+        set => this.RaiseAndSetIfChanged(ref _editingName, value);
+    }
+
+    public ICommand RenameCategory { get; }
+    public ICommand DeleteCategory { get; }
+    public ICommand CommitRenameCategory { get; }
+    public ICommand CancelRenameCategory { get; }
+
+    public Category Category { get; }
+    private readonly WorkspaceTabViewModel _parent;
     public ObservableCollection<ItemViewModel> ItemsInCategory { get; } = new();
 
     public CategoryViewModel(Category category, WorkspaceTabViewModel parent)
@@ -31,5 +52,39 @@ public class CategoryViewModel : ReactiveObject
 
         foreach (var item in items)
             ItemsInCategory.Add(new ItemViewModel(item));
+
+        RenameCategory = new RelayCommand(() =>
+        {
+            EditingName = Name;
+            IsEditingName = true;
+        });
+
+        DeleteCategory = new RelayCommand(() =>
+        {
+            var svc = App.Services.GetRequiredService<CategoryService>();
+            svc.Delete(Category.Id);
+            _parent.LoadCategories(_parent.Workspace.Id);
+        });
+
+        CommitRenameCategory = new RelayCommand(() =>
+        {
+            var trimmed = (EditingName ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(trimmed)) trimmed = Name;
+
+            var svc = App.Services.GetRequiredService<CategoryService>();
+            svc.Update(Category.Id, trimmed, Category.Description ?? string.Empty);
+
+            // Update local state and refresh parent list
+            Category.Name = trimmed;
+            Name = trimmed;
+            IsEditingName = false;
+            _parent.LoadCategories(_parent.Workspace.Id);
+        });
+
+        CancelRenameCategory = new RelayCommand(() =>
+        {
+            IsEditingName = false;
+            EditingName = Name;
+        });
     }
 }

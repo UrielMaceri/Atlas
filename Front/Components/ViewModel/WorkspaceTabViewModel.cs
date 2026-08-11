@@ -21,12 +21,6 @@ public class WorkspaceTabViewModel : ReactiveObject
     private string _newCategoryName = string.Empty;
     private string _newCategoryDescription = string.Empty;
 
-
-    public Workspace Workspace { get; }
-    
-    public ObservableCollection<CategoryViewModel> Categories { get; } = new();
-    public ObservableCollection<TagViewModel> Tags { get; } = new();
-
     public string Name
     {
         get => _name;
@@ -85,6 +79,10 @@ public class WorkspaceTabViewModel : ReactiveObject
     public ICommand AddNewCategory { get; }
     public ICommand CommitCreateCategoryCommand { get; }
     public ICommand CancelCreateCategoryCommand { get; }
+
+    public Workspace Workspace { get; }
+    public ObservableCollection<CategoryViewModel> Categories { get; } = new();
+    public ObservableCollection<TagViewModel> Tags { get; } = new();
 
     public ObservableCollection<CategoryViewModel> LoadCategories(int workspaceId)
     {
