@@ -17,6 +17,12 @@ public class ItemViewModel : ReactiveObject
         private set => this.RaiseAndSetIfChanged(ref _name, value);
     }
     
+    private string _displayIconPath;
+    public string DisplayIconPath{
+        get => _displayIconPath;
+        private set => this.RaiseAndSetIfChanged(ref _displayIconPath, value);
+    }
+    
     public ObservableCollection<TagViewModel> TagsInItem { get; } = new();
     
     public ItemViewModel(Item item, CategoryViewModel? parent = null)
@@ -24,6 +30,7 @@ public class ItemViewModel : ReactiveObject
         Item = item;
         _parent  = parent;
         _name    = item.Name;
+        _displayIconPath = item.IconPath;
 
         // Load this item's tags from the DB
         var service = App.Services.GetRequiredService<ItemService>();

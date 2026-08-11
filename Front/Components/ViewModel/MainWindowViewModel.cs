@@ -103,6 +103,8 @@ public class MainWindowViewModel : ReactiveObject
         var idx = WorkspaceTabs.IndexOf(tab);
         WorkspaceTabs.Remove(tab);
 
+        HomeTab.ViewModel.Refresh();
+
         if (SelectedTab == tab)
         {
             if (WorkspaceTabs.Count > 0)

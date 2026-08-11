@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Front"
+             x:Class="Front.CategoryRowView"
+             x:DataType="local:CategoryViewModel">
+    <DockPanel>
+        <Border BorderBrush="#3a3a3a"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12"
+                Margin="0,0,0,8">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top"
+                            Orientation="Horizontal"
+                            Spacing="8"
+                            Margin="0,0,0,10">
+                    <TextBlock Text="{Binding Name}"
+                            FontWeight="SemiBold"
+                            VerticalAlignment="Center" />
+                    <Button Classes="icon-btn"
+                            ToolTip.Tip="Rename">
+                        <PathIcon Data="M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25M20.71,7.04A1,1 0 0,0 20.71,5.63L18.37,3.29A1,1 0 0,0 16.96,3.29L15.12,5.12L18.87,8.87L20.71,7.04Z"
+                                Width="14" Height="14"/>
+                    </Button>
+                    <Button Classes="icon-btn"
+                            ToolTip.Tip="Delete">
+                        <PathIcon Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
+                                Width="14" Height="14"/>
+                    </Button>
+                </StackPanel>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding ItemsInCategory}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:ItemViewModel">
+                                <Border Width="90"
+                                        Height="90"
+                                        Margin="6"
+                                        Padding="8"
+                                        CornerRadius="8"
+                                        BorderBrush="#4a4a4a"
+                                        BorderThickness="1">
+                                    <StackPanel HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <Image Source="{Binding DisplayIconPath}"
+                                            Width="56"
+                                            Height="56"
+                                            Stretch="Uniform" />
+                                        <TextBlock Text="{Binding Name}"
+                                                Margin="0,4,0,0"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextAlignment="Center"
+                                                FontSize="11" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+    </DockPanel>
+
+</UserControl>

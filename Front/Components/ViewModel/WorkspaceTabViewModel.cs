@@ -17,6 +17,10 @@ public class WorkspaceTabViewModel : ReactiveObject
     private bool _isEditingName;
     private string _editingName = string.Empty;
     private bool _isNew;
+    private bool _isCreating;
+    private string _newCategoryName = string.Empty;
+    private string _newCategoryDescription = string.Empty;
+
 
     public Workspace Workspace { get; }
     
@@ -52,15 +56,35 @@ public class WorkspaceTabViewModel : ReactiveObject
         get => _isNew;
         set => this.RaiseAndSetIfChanged(ref _isNew, value);
     }
+    
+    public bool IsCreating
+    {
+        get => _isCreating;
+        set => this.RaiseAndSetIfChanged(ref _isCreating, value);
+    }
+
+    public string NewCategoryName
+    {
+        get => _newCategoryName;
+        set => this.RaiseAndSetIfChanged(ref _newCategoryName, value);
+    }
+
+    public string NewCategoryDescription
+    {
+        get => _newCategoryDescription;
+        set => this.RaiseAndSetIfChanged(ref _newCategoryDescription, value);
+    }
 
     // Wired by MainWindowViewModel after construction
     public Action<WorkspaceTabViewModel>? RequestClose { get; set; }
     public ICommand? SelectCommand { get; set; }
-
     public ICommand CloseCommand { get; }
     public ICommand BeginRenameCommand { get; }
     public ICommand CommitRenameCommand { get; }
     public ICommand CancelRenameCommand { get; }
+    public ICommand AddNewCategory { get; }
+    public ICommand CommitCreateCategoryCommand { get; }
+    public ICommand CancelCreateCategoryCommand { get; }
 
     public ObservableCollection<CategoryViewModel> LoadCategories(int workspaceId)
     {
@@ -124,7 +148,35 @@ public class WorkspaceTabViewModel : ReactiveObject
                 service.Delete(Workspace.Id);
                 CloseCommand.Execute(null);
             }
-            
+        });
+
+        AddNewCategory = new RelayCommand(() =>
+        {
+            NewCategoryName = string.Empty;
+            NewCategoryDescription = string.Empty;
+            IsCreating = true;
+        });
+
+        CommitCreateCategoryCommand = new RelayCommand(() =>
+        {
+            var name = NewCategoryName?.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+                name = "New Category";
+
+            var service = App.Services.GetRequiredService<CategoryService>();
+            service.Create(name, NewCategoryDescription?.Trim() ?? string.Empty, workspace.Id);
+            LoadCategories(workspace.Id);
+
+            NewCategoryName = string.Empty;
+            NewCategoryDescription = string.Empty;
+            IsCreating = false;
+        });
+
+        CancelCreateCategoryCommand = new RelayCommand(() =>
+        {
+            IsCreating = false;
+            NewCategoryName = string.Empty;
+            NewCategoryDescription = string.Empty;
         });
     }
 }

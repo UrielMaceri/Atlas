@@ -4,55 +4,119 @@
              x:Class="Front.WorkspaceView"
              x:DataType="local:WorkspaceTabViewModel">
 
-    <DockPanel>
+    <Grid>
+        <DockPanel>
 
-        <!-- Workspace header bar -->
-        <Border DockPanel.Dock="Top"
-                Background="#181818"
-                BorderBrush="#2a2a2a"
-                BorderThickness="0,0,0,1"
-                Padding="20,12">
-            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <!-- Workspace header bar -->
+            <Border DockPanel.Dock="Top"
+                    Background="#181818"
+                    BorderBrush="#2a2a2a"
+                    BorderThickness="0,0,0,1"
+                    Padding="20,12">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
 
-                <!-- Normal: name + rename button -->
-                <TextBlock Text="{Binding Name}"
-                           FontSize="18"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"
-                           IsVisible="{Binding !IsEditingName}"/>
-                <Button Classes="icon-btn"
-                        ToolTip.Tip="Rename"
-                        Command="{Binding BeginRenameCommand}"
-                        IsVisible="{Binding !IsEditingName}">
-                    <!-- Pencil icon -->
-                    <PathIcon Data="M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25M20.71,7.04A1,1 0 0,0 20.71,5.63L18.37,3.29A1,1 0 0,0 16.96,3.29L15.12,5.12L18.87,8.87L20.71,7.04Z"
-                              Width="14" Height="14"/>
-                </Button>
+                    <!-- Normal: name + rename button -->
+                    <TextBlock Text="{Binding Name}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding !IsEditingName}"/>
+                    <Button Classes="icon-btn"
+                            ToolTip.Tip="Rename"
+                            Command="{Binding BeginRenameCommand}"
+                            IsVisible="{Binding !IsEditingName}">
+                        <!-- Pencil icon -->
+                        <PathIcon Data="M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25M20.71,7.04A1,1 0 0,0 20.71,5.63L18.37,3.29A1,1 0 0,0 16.96,3.29L15.12,5.12L18.87,8.87L20.71,7.04Z"
+                                  Width="14" Height="14"/>
+                    </Button>
 
-                <!-- Editing: textbox + confirm/cancel -->
-                <TextBox Text="{Binding EditingName}"
-                         Classes="inline-rename"
-                         MinWidth="160"
-                         IsVisible="{Binding IsEditingName}"/>
-                <Button Classes="action-button"
-                        Content="✓"
-                        Command="{Binding CommitRenameCommand}"
-                        IsVisible="{Binding IsEditingName}"/>
-                <Button Classes="action-button"
-                        Content="✕"
-                        Command="{Binding CancelRenameCommand}"
-                        IsVisible="{Binding IsEditingName}"/>
-            </StackPanel>
+                    <!-- Editing: textbox + confirm/cancel -->
+                    <TextBox Text="{Binding EditingName}"
+                             Classes="inline-rename"
+                             MinWidth="160"
+                             IsVisible="{Binding IsEditingName}"/>
+                    <Button Classes="action-button"
+                            Content="✓"
+                            Command="{Binding CommitRenameCommand}"
+                            IsVisible="{Binding IsEditingName}"/>
+                    <Button Classes="action-button"
+                            Content="✕"
+                            Command="{Binding CancelRenameCommand}"
+                            IsVisible="{Binding IsEditingName}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Content area - Categories and Items -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="16" Spacing="12">
+                    <Button Content="+ New Category"
+                            HorizontalAlignment="Left"
+                            Command="{Binding AddNewCategory}"
+                            Width="140" />
+                    <ItemsControl ItemsSource="{Binding Categories}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:CategoryViewModel">
+                                <local:CategoryRowView/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+
+        <!-- Create category modal overlay -->
+        <Border Background="#88000000"
+                IsVisible="{Binding IsCreating}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <Grid HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Margin="16">
+                <Border Background="#1c1c1c"
+                        CornerRadius="12"
+                        Padding="22"
+                        Width="440"
+                        MaxWidth="520">
+                    <StackPanel Spacing="16">
+                        <TextBlock Text="Create category"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Enter a name and optional description for the new category."
+                                   Foreground="#999999"
+                                   TextWrapping="Wrap"/>
+
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Name"
+                                       FontSize="12"
+                                       Foreground="#aaaaaa"/>
+                            <TextBox Text="{Binding NewCategoryName}"
+                                     Classes="card-input"
+                                     PlaceholderText="Category name"/>
+
+                            <TextBlock Text="Description"
+                                       FontSize="12"
+                                       Foreground="#aaaaaa"/>
+                            <TextBox Text="{Binding NewCategoryDescription}"
+                                     Classes="card-input"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="100"
+                                     PlaceholderText="Optional description"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Spacing="10">
+                            <Button Classes="action-button"
+                                    Content="Cancel"
+                                    Command="{Binding CancelCreateCategoryCommand}"/>
+                            <Button Classes="action-button"
+                                    Content="Create"
+                                    Command="{Binding CommitCreateCategoryCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Border>
-
-        <!-- Content area (placeholder) -->
-        <Grid>
-            <TextBlock Classes="empty-state"
-                       Text="Workspace content coming soon."
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-        </Grid>
-
-    </DockPanel>
-
+    </Grid>
 </UserControl>
