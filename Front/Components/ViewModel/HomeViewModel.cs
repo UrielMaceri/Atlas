@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Avalonia.Controls;
 using Back.Classes;
 using Back.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -122,6 +123,7 @@ public class WorkspaceCardViewModel : ReactiveObject
             var service = App.Services.GetRequiredService<WorkspaceService>();
             service.Delete(Workspace.Id);
             _parent.RemoveCard(this);           
+            _parent.Refresh();
         });
     }
 }

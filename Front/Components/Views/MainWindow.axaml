@@ -73,7 +73,7 @@
         </Border>
 
         <!-- ── Tab content ── -->
-        <Panel>
+        <Grid>
 
             <!-- Home content -->
             <ContentControl Content="{Binding HomeTab.ViewModel}"
@@ -101,7 +101,20 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-        </Panel>
+            <!-- Messages popup -->
+            <Border Background="#CC000000"
+                    CornerRadius="6"
+                    Padding="10"
+                    Margin="12"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    IsVisible="{Binding IsNotificationVisible}">
+                <TextBlock Text="{Binding NotificationMessage}"
+                        Foreground="White"
+                        FontSize="14"/>
+            </Border>
+
+        </Grid>
 
     </DockPanel>
 

@@ -2,18 +2,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Front"
              x:Class="Front.CategoryRowView"
-             x:DataType="local:CategoryViewModel">
+             x:DataType="local:CategoryViewModel"
+             DragDrop.AllowDrop="True">
     <DockPanel>
         <Border BorderBrush="#3a3a3a"
                 BorderThickness="1"
                 CornerRadius="8"
+                Background="Transparent"
                 Padding="12"
-                Margin="0,0,0,8">
+                Margin="0,0,0,8"
+                DragDrop.AllowDrop="True">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top"
                             Orientation="Vertical"
                             Spacing="8"
-                            Margin="0,0,0,10">
+                            Margin="0,0,0,10"
+                            DragDrop.AllowDrop="True">
                     <StackPanel Orientation="Horizontal"
                                 Spacing="8"
                                 IsVisible="{Binding !IsEditingName}">
@@ -51,9 +55,9 @@
                 </StackPanel>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"
                             VerticalScrollBarVisibility="Disabled"
-                            DragDrop.AllowDrop="True"
                             Background="Transparent">
-                    <ItemsControl ItemsSource="{Binding ItemsInCategory}">
+                    <ItemsControl ItemsSource="{Binding ItemsInCategory}"
+                                    DragDrop.AllowDrop="True">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" />
@@ -62,26 +66,7 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="local:ItemViewModel">
-                                <Border Width="90"
-                                        Height="90"
-                                        Margin="6"
-                                        Padding="8"
-                                        CornerRadius="8"
-                                        BorderBrush="#4a4a4a"
-                                        BorderThickness="1">
-                                    <StackPanel HorizontalAlignment="Center"
-                                                VerticalAlignment="Center">
-                                        <Image Source="{Binding DisplayIconPath}"
-                                            Width="56"
-                                            Height="56"
-                                            Stretch="Uniform" />
-                                        <TextBlock Text="{Binding Name}"
-                                                Margin="0,4,0,0"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextAlignment="Center"
-                                                FontSize="11" />
-                                    </StackPanel>
-                                </Border>
+                                <local:ItemsInCategoryView/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

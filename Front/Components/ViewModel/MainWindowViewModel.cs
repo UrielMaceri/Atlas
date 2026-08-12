@@ -5,6 +5,8 @@ using Back.Classes;
 using Back.Services;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using Avalonia.Threading;
+using System;
 
 namespace Front;
 
@@ -12,6 +14,22 @@ public class MainWindowViewModel : ReactiveObject
 {
     private bool _homeIsSelected = true;
     private object? _selectedTab;
+
+    private string _notificationMessage = string.Empty;
+    private bool _isNotificationVisible;
+
+    public string NotificationMessage
+    {
+        get => _notificationMessage;
+        private set => this.RaiseAndSetIfChanged(ref _notificationMessage, value);
+    }
+
+    public bool IsNotificationVisible
+    {
+        get => _isNotificationVisible;
+        private set => this.RaiseAndSetIfChanged(ref _isNotificationVisible, value);
+    }
+
 
     public HomeTabSentinel HomeTab { get; }
 
@@ -81,6 +99,18 @@ public class MainWindowViewModel : ReactiveObject
         SelectTab(tab);
     }
 
+    public void ShowNotification(string message)
+    {
+        NotificationMessage = message;
+        IsNotificationVisible = true;
+
+        DispatcherTimer.Run(() =>
+        {
+            IsNotificationVisible = false;
+            return false; // stop timer
+        }, TimeSpan.FromSeconds(5));
+    }
+
     private void AddNewWorkspace()
     {
         var service = App.Services.GetRequiredService<WorkspaceService>();
@@ -116,7 +146,7 @@ public class MainWindowViewModel : ReactiveObject
 
     private WorkspaceTabViewModel BuildTab(Workspace workspace)
     {
-        var tab = new WorkspaceTabViewModel(workspace);
+        var tab = new WorkspaceTabViewModel(workspace, ShowNotification);
         tab.RequestClose  = CloseTab;
         tab.SelectCommand = new RelayCommand(() => SelectTab(tab));
         return tab;

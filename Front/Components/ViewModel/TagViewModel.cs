@@ -12,6 +12,7 @@ public class TagViewModel : ReactiveObject
     public Tag Tag { get; }
 
     private readonly WorkspaceTabViewModel? _parent;
+    private readonly Action<string>? _showNotification;
     private string _name;
     public string Name{
         get => _name;
@@ -20,17 +21,18 @@ public class TagViewModel : ReactiveObject
     
     public ObservableCollection<ItemViewModel> ItemsWithTag { get; } = new();
 
-    public TagViewModel(Tag tag, WorkspaceTabViewModel? parent = null)
+    public TagViewModel(Tag tag, WorkspaceTabViewModel? parent = null, Action<string>? showNotification = null)
     {
         Tag = tag;
         _parent = parent;
+        _showNotification = showNotification;
         _name = tag.Name;
         // Load this tag's items from the DB
         var service = App.Services.GetRequiredService<ItemService>();
         var items   = service.GetByTag(tag.Id);
 
         foreach (var item in items)
-            ItemsWithTag.Add(new ItemViewModel(item));
+            ItemsWithTag.Add(new ItemViewModel(item, null, _showNotification));
 
     }
 }

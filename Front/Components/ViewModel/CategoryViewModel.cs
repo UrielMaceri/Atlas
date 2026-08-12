@@ -39,19 +39,24 @@ public class CategoryViewModel : ReactiveObject
     public Category Category { get; }
     private readonly WorkspaceTabViewModel _parent;
     public ObservableCollection<ItemViewModel> ItemsInCategory { get; } = new();
+    public Action<string>? ShowNotification { get; set; }
 
-    public CategoryViewModel(Category category, WorkspaceTabViewModel parent)
+    public CategoryViewModel(Category category, WorkspaceTabViewModel parent, Action<string>? showNotification = null)
     {
         Category = category;
         _parent  = parent;
         _name    = category.Name;
+        ShowNotification = showNotification;
 
         // Load this category's items from the DB
         var service = App.Services.GetRequiredService<ItemService>();
         var items   = service.GetByCategory(category.Id);
 
         foreach (var item in items)
-            ItemsInCategory.Add(new ItemViewModel(item));
+        {
+            var itemVm = new ItemViewModel(item, this, showNotification);
+            ItemsInCategory.Add(itemVm);
+        }
 
         RenameCategory = new RelayCommand(() =>
         {
@@ -61,9 +66,15 @@ public class CategoryViewModel : ReactiveObject
 
         DeleteCategory = new RelayCommand(() =>
         {
-            var svc = App.Services.GetRequiredService<CategoryService>();
-            svc.Delete(Category.Id);
-            _parent.LoadCategories(_parent.Workspace.Id);
+            if (ItemsInCategory.Count == 0)
+            {
+                var svc = App.Services.GetRequiredService<CategoryService>();
+                svc.Delete(Category.Id);
+                _parent.LoadCategories(_parent.Workspace.Id);
+            } else
+            {
+                ShowNotification?.Invoke($"Cannot delete a Category with items.");
+            }
         });
 
         CommitRenameCategory = new RelayCommand(() =>

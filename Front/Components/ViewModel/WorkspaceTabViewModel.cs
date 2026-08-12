@@ -20,6 +20,7 @@ public class WorkspaceTabViewModel : ReactiveObject
     private bool _isCreating;
     private string _newCategoryName = string.Empty;
     private string _newCategoryDescription = string.Empty;
+    private readonly Action<string>? _showNotification;
 
     public string Name
     {
@@ -92,7 +93,13 @@ public class WorkspaceTabViewModel : ReactiveObject
 
         Categories.Clear();
         foreach (var cat in CategoriesInWorkspace)
-            Categories.Add(new CategoryViewModel(cat, this));
+        {
+            var categoryVm = new CategoryViewModel(cat, this)
+            {
+                ShowNotification = _showNotification
+            };
+            Categories.Add(categoryVm);
+        }
         return Categories;
     }
 
@@ -104,13 +111,14 @@ public class WorkspaceTabViewModel : ReactiveObject
 
         Tags.Clear();
         foreach (var tag in TagsInWorkspace)
-            Tags.Add(new TagViewModel(tag, this));
+            Tags.Add(new TagViewModel(tag, this, _showNotification));
         return Tags;
     }
 
-    public WorkspaceTabViewModel(Workspace workspace)
+    public WorkspaceTabViewModel(Workspace workspace, Action<string>? showNotification = null)
     {
         Workspace = workspace;
+        _showNotification = showNotification;
         _name = workspace.Name;
 
         LoadCategories(Workspace.Id);
