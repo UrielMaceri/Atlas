@@ -13,7 +13,7 @@ Atlas is a personal productivity app designed to help you manage digital resourc
 Pending for 1.0:
 - Contextual menu over items (Delete/Update)
 - Sortable categories and items 
-- First version of App Icon
+- First version of Icon for the App
 - Installer/updater of Atlas release
 
 ## Core Features
