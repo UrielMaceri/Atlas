@@ -6,9 +6,38 @@
         Title="Atlas"
         Width="1100" Height="700"
         MinWidth="700" MinHeight="450"
-        Background="#1a1a1a">
+        Background="#1a1a1a"
+        WindowDecorations="None">
 
     <DockPanel>
+
+        <!-- ── Custom Title Bar ── -->
+        <Border Classes="custom-title-bar"
+                DockPanel.Dock="Top"
+                x:Name="TitleBar">
+            <DockPanel LastChildFill="False">
+                <!-- Title text -->
+                <TextBlock Classes="title-text"
+                           Text="Atlas"
+                           DockPanel.Dock="Left"/>
+
+                <!-- Window control buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="2" DockPanel.Dock="Right">
+                    <Button Classes="window-btn"
+                            Content="−"
+                            x:Name="MinimizeButton"
+                            ToolTip.Tip="Minimize"/>
+                    <Button Classes="window-btn"
+                            Content="□"
+                            x:Name="MaximizeButton"
+                            ToolTip.Tip="Maximize"/>
+                    <Button Classes="window-btn window-btn-close"
+                            Content="✕"
+                            x:Name="CloseButton"
+                            ToolTip.Tip="Close"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
 
         <!-- ── Custom tab strip ── -->
         <Border DockPanel.Dock="Top"

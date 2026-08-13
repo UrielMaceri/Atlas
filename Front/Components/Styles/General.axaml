@@ -213,4 +213,43 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
+    <!-- ── Custom Title Bar ─────────────────────────────── -->
+
+    <Style Selector="Border.custom-title-bar">
+        <Setter Property="Background" Value="#0d0d0d" />
+        <Setter Property="BorderBrush" Value="#1a1a1a" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Height" Value="32" />
+    </Style>
+
+    <Style Selector="TextBlock.title-text">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.window-btn">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Foreground" Value="#aaaaaa" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="MinWidth" Value="40" />
+        <Setter Property="Height" Value="32" />
+    </Style>
+
+    <Style Selector="Button.window-btn:pointerover">
+        <Setter Property="Background" Value="#2a2a2a" />
+        <Setter Property="Foreground" Value="#ffffff" />
+    </Style>
+
+    <Style Selector="Button.window-btn-close:pointerover">
+        <Setter Property="Background" Value="#c42b1c" />
+        <Setter Property="Foreground" Value="#ffffff" />
+    </Style>
+
 </Styles>
