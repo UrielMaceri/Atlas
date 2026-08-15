@@ -12,6 +12,7 @@ public class CategoryViewModel : ReactiveObject
     private string _name;
     private bool _isEditingName;
     private string _editingName = string.Empty;
+    private readonly Action<string>? _showNotification;
 
     public string Name
     {
@@ -41,12 +42,27 @@ public class CategoryViewModel : ReactiveObject
     public ObservableCollection<ItemViewModel> ItemsInCategory { get; } = new();
     public Action<string>? ShowNotification { get; set; }
 
+    public ObservableCollection<ItemViewModel> LoadItems(int categoryId)
+    {
+        var service = App.Services.GetRequiredService<ItemService>();
+
+        var Items = service.GetByCategory(categoryId);
+
+        ItemsInCategory.Clear();
+        foreach (var ite in Items)
+        {
+            var itemVm = new ItemViewModel(ite, this, ShowNotification);
+            ItemsInCategory.Add(itemVm);
+        }
+        return ItemsInCategory;
+    }
+
     public CategoryViewModel(Category category, WorkspaceTabViewModel parent, Action<string>? showNotification = null)
     {
         Category = category;
         _parent  = parent;
         _name    = category.Name;
-        ShowNotification = showNotification;
+        _showNotification = showNotification;
 
         // Load this category's items from the DB
         var service = App.Services.GetRequiredService<ItemService>();

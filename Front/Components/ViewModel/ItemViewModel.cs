@@ -10,6 +10,7 @@ using Back.Services;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Avalonia.OpenGL.Controls;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Front;
 
@@ -22,6 +23,9 @@ public class ItemViewModel : ReactiveObject
     }
 
     public ICommand OpenFileCommand { get; }
+    public ICommand RenameItemCommand { get; }
+    public ICommand DeleteItemCommand { get; }
+
     public string FilePath => Item.Path;
 
     public Item Item { get; }
@@ -88,6 +92,8 @@ public class ItemViewModel : ReactiveObject
 
 
         OpenFileCommand = new RelayCommand(OpenFile);
+        RenameItemCommand = new RelayCommand(RenameItem);
+        DeleteItemCommand = new RelayCommand(DeleteItem);     
     }
 
     private void OpenFile()
@@ -95,7 +101,10 @@ public class ItemViewModel : ReactiveObject
         try
         {
             if (string.IsNullOrWhiteSpace(FilePath) || !File.Exists(FilePath))
-                ShowNotification?.Invoke($"File not found");
+            {
+                ShowNotification?.Invoke("File not found");
+                return;
+            }
 
             Process.Start(new ProcessStartInfo(FilePath) { UseShellExecute = true });
         }
@@ -104,4 +113,22 @@ public class ItemViewModel : ReactiveObject
             ShowNotification?.Invoke($"Unable to open file: {ex.Message}");
         }
     }
+    private void RenameItem()
+    {
+        var service = App.Services.GetRequiredService<ItemService>();
+
+    }
+    private void DeleteItem()
+    {
+        if (_parent is null)
+        {
+            ShowNotification?.Invoke("No parent category available.");
+            return;
+        }
+
+        var service = App.Services.GetRequiredService<ItemService>();
+        service.Delete(Item.Id);
+        _parent.LoadItems(_parent.Category.Id);
+    }
+
 }
