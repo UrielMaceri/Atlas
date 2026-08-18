@@ -9,7 +9,7 @@
 Atlas is a personal productivity app designed to help you manage digital resources in a clean, flexible, and intuitive way. Instead of relying only on traditional folder structures, Atlas lets you create custom categories, enrich items with tags, pin favorites, and browse everything through search and smart views while keeping your files in their original locations.
 
 ## Project Status
-### Version 0.9
+### Version 0.5
 Pending for 1.0:
 - Contextual menu over items (Delete/Update)
 - Sortable categories and items 
