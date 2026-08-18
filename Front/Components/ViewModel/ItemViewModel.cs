@@ -20,8 +20,10 @@ public class ItemViewModel : ReactiveObject
     private string _newName = string.Empty;
     private string _newDescription = string.Empty;
     private int _newCategory = 0;
+    private bool _isEditing;
 
-    public string Name{
+    public string Name
+    {
         get => _name;
         private set => this.RaiseAndSetIfChanged(ref _name, value);
     }
@@ -40,11 +42,20 @@ public class ItemViewModel : ReactiveObject
         get => _newCategory;
         private set => this.RaiseAndSetIfChanged(ref _newCategory, value);
     }
+    public bool IsEditingName
+    {
+        get => _isEditing;
+        private set => this.RaiseAndSetIfChanged(ref _isEditing, value);
+    }
 
     public ICommand OpenFileCommand { get; }
-    public ICommand RenameItemCommand { get; }
     public ICommand DeleteItemCommand { get; }
+    public ICommand RenameItemCommand { get; }
+    public ICommand RenameCommit { get; }
+    public ICommand RenameCancel { get; }
     public ICommand ChangeCategoryCommand { get; }
+    public ICommand ChangeCategoryCommit { get; }
+    public ICommand ChangeCategoryCancel { get; }
 
     public string FilePath => Item.Path;
 
@@ -112,7 +123,7 @@ public class ItemViewModel : ReactiveObject
 
 
         OpenFileCommand = new RelayCommand(OpenFile);
-        DeleteItemCommand = new RelayCommand(DeleteItem);     
+        DeleteItemCommand = new RelayCommand(DeleteItem);    
         RenameItemCommand = new RelayCommand(() =>
             {
                 var service = App.Services.GetRequiredService<ItemService>();
