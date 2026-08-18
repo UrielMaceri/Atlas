@@ -37,7 +37,7 @@ public partial class CategoryRowView : UserControl
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
                 continue;
 
-            var itemName = Path.GetFileName(filePath);
+            var itemName = Path.GetFileNameWithoutExtension(filePath);
             var iconPath = IconHelper.ExtractAndSave(filePath);
 
             var item = service.Create(itemName, string.Empty, filePath, iconPath, categoryVm.Category.Id, false);
