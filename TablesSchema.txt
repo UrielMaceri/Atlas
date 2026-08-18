@@ -15,7 +15,7 @@ Item{
     Id: int autonumber
     Name: Str
     Description: Str
-    CategoryId: int FK NULLABLE
+    CategoryId: int FK
     IsFavorite: bool 
     Path: Str 
     IconPath: Str
