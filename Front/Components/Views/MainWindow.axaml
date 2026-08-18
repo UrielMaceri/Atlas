@@ -7,7 +7,7 @@
         Width="1100" Height="700"
         MinWidth="700" MinHeight="450"
         Background="#1a1a1a"
-        WindowDecorations="None">
+        WindowDecorations="BorderOnly">
 
     <DockPanel>
 
@@ -142,9 +142,6 @@
                         Foreground="White"
                         FontSize="14"/>
             </Border>
-
         </Grid>
-
     </DockPanel>
-
 </Window>

@@ -52,7 +52,8 @@
                     <Button Content="+ New Category"
                             HorizontalAlignment="Left"
                             Command="{Binding AddNewCategory}"
-                            Width="140" />
+                            Width="140" 
+                            IsVisible="{Binding !IsNew}"/>
                     <ItemsControl ItemsSource="{Binding Categories}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="local:CategoryViewModel">

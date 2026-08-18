@@ -28,6 +28,8 @@
                                 Command="{Binding RenameItemCommand}" />
                         <MenuItem Header="Delete"
                                 Command="{Binding DeleteItemCommand}" />
+                        <MenuItem Header="Change Category"
+                                Command="{Binding ChangeCategoryCommand}" />
                     </ContextMenu>
                 </Border.ContextMenu>
 

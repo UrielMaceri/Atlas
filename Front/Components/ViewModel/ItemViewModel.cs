@@ -17,14 +17,34 @@ namespace Front;
 public class ItemViewModel : ReactiveObject
 {
     private string _name;
+    private string _newName = string.Empty;
+    private string _newDescription = string.Empty;
+    private int _newCategory = 0;
+
     public string Name{
         get => _name;
         private set => this.RaiseAndSetIfChanged(ref _name, value);
+    }
+    public string NewName
+    {
+        get => _newName;
+        private set => this.RaiseAndSetIfChanged(ref _newName, value);
+    }
+    public string NewDescription
+    {
+        get => _newDescription;
+        private set => this.RaiseAndSetIfChanged(ref _newDescription, value);
+    }
+    public int NewCategory
+    {
+        get => _newCategory;
+        private set => this.RaiseAndSetIfChanged(ref _newCategory, value);
     }
 
     public ICommand OpenFileCommand { get; }
     public ICommand RenameItemCommand { get; }
     public ICommand DeleteItemCommand { get; }
+    public ICommand ChangeCategoryCommand { get; }
 
     public string FilePath => Item.Path;
 
@@ -92,8 +112,31 @@ public class ItemViewModel : ReactiveObject
 
 
         OpenFileCommand = new RelayCommand(OpenFile);
-        RenameItemCommand = new RelayCommand(RenameItem);
         DeleteItemCommand = new RelayCommand(DeleteItem);     
+        RenameItemCommand = new RelayCommand(() =>
+            {
+                var service = App.Services.GetRequiredService<ItemService>();
+                if (NewName == string.Empty)
+                {
+                    NewName = item.Name;
+                }
+                if (NewDescription == string.Empty)
+                {
+                    NewDescription = item.Description;
+                }
+                service.Update(item.Id, NewName, NewDescription, item.Path, item.IconPath, item.CategoryId, item.IsFavorite);
+            }
+        );
+        ChangeCategoryCommand = new RelayCommand(() =>
+            {
+                var service = App.Services.GetRequiredService<ItemService>();
+                if (NewCategory == item.CategoryId || NewCategory == 0)
+                {
+                    return;
+                }
+                service.Update(item.Id, item.Name, item.Description, item.Path, item.IconPath, NewCategory, item.IsFavorite);
+            }
+        );     
     }
 
     private void OpenFile()
@@ -113,11 +156,6 @@ public class ItemViewModel : ReactiveObject
             ShowNotification?.Invoke($"Unable to open file: {ex.Message}");
         }
     }
-    private void RenameItem()
-    {
-        var service = App.Services.GetRequiredService<ItemService>();
-
-    }
     private void DeleteItem()
     {
         if (_parent is null)
@@ -130,5 +168,4 @@ public class ItemViewModel : ReactiveObject
         service.Delete(Item.Id);
         _parent.LoadItems(_parent.Category.Id);
     }
-
 }
