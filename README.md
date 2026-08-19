@@ -1,6 +1,6 @@
 # Atlas
 
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-4EAA25)
+![Platform](https://img.shields.io/badge/platform-Windows-4EAA25)
 ![Stack](https://img.shields.io/badge/stack-.NET%209%20%2B%20Avalonia-512BD4)
 ![Status](https://img.shields.io/badge/status-active%20development-ffb703)
 
