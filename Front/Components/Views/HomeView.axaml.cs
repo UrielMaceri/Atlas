@@ -49,12 +49,6 @@ public partial class HomeView : UserControl
                         },
                         new TextBlock
                         {
-                            Text = $"{card.Description}",
-                            FontSize = 18,
-                            FontWeight = Avalonia.Media.FontWeight.SemiBold
-                        },
-                        new TextBlock
-                        {
                             Text = "Are you sure?",
                             TextWrapping = Avalonia.Media.TextWrapping.Wrap
                         },
@@ -87,7 +81,7 @@ public partial class HomeView : UserControl
             }
         };
 
-        var buttons = ((StackPanel)((StackPanel)((Border)dialog.Content!).Child!).Children[4]).Children;
+        var buttons = ((StackPanel)((StackPanel)((Border)dialog.Content!).Child!).Children[3]).Children;
         ((Button)buttons[0]).Click += (_, _) => dialog.Close(false);
         ((Button)buttons[1]).Click += (_, _) => dialog.Close(true);
 
