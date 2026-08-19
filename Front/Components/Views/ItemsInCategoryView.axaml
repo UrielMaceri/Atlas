@@ -25,6 +25,8 @@
                     <ContextMenu>
                         <MenuItem Header="Open"
                                 Command="{Binding OpenFileCommand}" />
+                        <MenuItem Header="Open Path"
+                                Command="{Binding OpenPathCommand}" />
                         <MenuItem Header="Rename"
                                 Command="{Binding RenameItemCommand}" />
                         <MenuItem Header="Delete"

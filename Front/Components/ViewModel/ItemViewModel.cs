@@ -67,6 +67,7 @@ public class ItemViewModel : ReactiveObject
     }
 
     public ICommand OpenFileCommand { get; }
+    public ICommand OpenPathCommand { get; }
     public ICommand DeleteItemCommand { get; }
     public ICommand RenameItemCommand { get; }
     public ICommand RenameCommit { get; }
@@ -145,6 +146,7 @@ public class ItemViewModel : ReactiveObject
 
 
         OpenFileCommand = new RelayCommand(OpenFile);
+        OpenPathCommand = new RelayCommand(OpenPath);
         DeleteItemCommand = new RelayCommand(DeleteItem);    
         
         RenameItemCommand = new RelayCommand(() =>
@@ -235,5 +237,26 @@ public class ItemViewModel : ReactiveObject
         var service = App.Services.GetRequiredService<ItemService>();
         service.Delete(Item.Id);
         _parent.LoadItems(_parent.Category.Id);
+    }
+    private void OpenPath()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(FilePath) || !File.Exists(FilePath))
+            {
+                ShowNotification?.Invoke("File not found");
+                return;
+            }
+            Process.Start(new ProcessStartInfo
+            {
+               FileName = "explorer.exe",
+               Arguments = $"/select,\"{Item.Path}\"", 
+               UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            ShowNotification?.Invoke($"Unable to open file: {ex.Message}");
+        }
     }
 }
