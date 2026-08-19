@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Back.Classes;
@@ -16,6 +17,9 @@ public class HomeViewModel : ReactiveObject
     /// <summary>Set by MainWindowViewModel so cards can open a tab.</summary>
     public Action<Workspace>? OpenWorkspaceAction { get; set; }
 
+    /// <summary>Set by HomeView so deletion can be confirmed before it is performed.</summary>
+    public Func<WorkspaceCardViewModel, Task>? DeleteConfirmationAction { get; set; }
+
     public HomeViewModel()
     {
         Refresh();
@@ -31,6 +35,9 @@ public class HomeViewModel : ReactiveObject
     }
 
     internal void RequestOpen(Workspace workspace) => OpenWorkspaceAction?.Invoke(workspace);
+
+    internal Task RequestDelete(WorkspaceCardViewModel card) =>
+        DeleteConfirmationAction?.Invoke(card) ?? Task.CompletedTask;
 
     internal void RemoveCard(WorkspaceCardViewModel card) => Workspaces.Remove(card);
 }
@@ -118,12 +125,14 @@ public class WorkspaceCardViewModel : ReactiveObject
 
         CancelEditCommand = new RelayCommand(() => IsEditing = false);
 
-        DeleteCommand = new RelayCommand(() =>
-        {
-            var service = App.Services.GetRequiredService<WorkspaceService>();
-            service.Delete(Workspace.Id);
-            _parent.RemoveCard(this);           
-            _parent.Refresh();
-        });
+        DeleteCommand = new RelayCommand(() => _ = _parent.RequestDelete(this));
+    }
+
+    internal void DeleteConfirmed()
+    {
+        var service = App.Services.GetRequiredService<WorkspaceService>();
+        service.Delete(Workspace.Id);
+        _parent.RemoveCard(this);
+        _parent.Refresh();
     }
 }

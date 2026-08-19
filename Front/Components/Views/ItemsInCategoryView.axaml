@@ -14,7 +14,7 @@
                 Margin="6">
             <Border Width="90"
                     MinHeight="90"
-                    MaxHeight="110"
+                    MaxHeight="150"
                     Margin="6"
                     Padding="8"
                     CornerRadius="8"
