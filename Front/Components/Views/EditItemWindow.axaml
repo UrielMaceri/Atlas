@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Front"
+        x:Class="Front.EditItemWindow"
+        x:DataType="local:ItemViewModel"
+        Title="Edit item"
+        Width="420"
+        SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#1c1c1c">
+    <Border Padding="24"
+            Margin="8"
+            Background="#292929"
+            BorderBrush="#555555"
+            BorderThickness="1"
+            CornerRadius="8">
+        <StackPanel Spacing="12">
+            <TextBlock Text="Edit item"
+                       FontSize="20"
+                       FontWeight="SemiBold" />
+
+            <TextBlock Text="Name" />
+            <TextBox Text="{Binding NewName, Mode=TwoWay}"
+                     PlaceholderText="Item name"
+                     Classes="card-input" />
+
+            <TextBlock Text="Description" />
+            <TextBox Text="{Binding NewDescription, Mode=TwoWay}"
+                     PlaceholderText="Description"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MinHeight="80"
+                     Classes="card-input" />
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="8"
+                        Margin="0,8,0,0">
+                <Button Content="Cancel"
+                        Command="{Binding RenameCancel}"
+                        Classes="action-button" />
+                <Button Content="Save"
+                        Command="{Binding RenameCommit}"
+                        Classes="action-button" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

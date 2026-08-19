@@ -6,14 +6,15 @@
              DragDrop.AllowDrop="True">
     <DockPanel>
         <Button Command="{Binding OpenFileCommand}"
-                ToolTip.Tip="{Binding FilePath}"
+                ToolTip.Tip="{Binding Description}"
                 Classes="item-tile-button"
                 Background="Transparent"
                 BorderBrush="Transparent"
                 Padding="0"
                 Margin="6">
             <Border Width="90"
-                    Height="90"
+                    MinHeight="90"
+                    MaxHeight="110"
                     Margin="6"
                     Padding="8"
                     CornerRadius="8"
@@ -41,11 +42,12 @@
                         Stretch="Uniform" />
                     <TextBlock Text="{Binding Name}"
                             Margin="0,4,0,0"
+                            TextWrapping="Wrap"
                             TextTrimming="CharacterEllipsis"
                             TextAlignment="Center"
                             FontSize="11" />
                 </StackPanel>
             </Border>
         </Button>
-    </DockPanel>
+        </DockPanel>
 </UserControl>

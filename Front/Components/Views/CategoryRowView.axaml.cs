@@ -39,8 +39,9 @@ public partial class CategoryRowView : UserControl
 
             var itemName = Path.GetFileNameWithoutExtension(filePath);
             var iconPath = IconHelper.ExtractAndSave(filePath);
+            var description = filePath; //By default, saving Path of the item in description, user editable 
 
-            var item = service.Create(itemName, string.Empty, filePath, iconPath, categoryVm.Category.Id, false);
+            var item = service.Create(itemName, description, filePath, iconPath, categoryVm.Category.Id, false);
             categoryVm.ItemsInCategory.Add(new ItemViewModel(item, categoryVm, categoryVm.ShowNotification));
         }
 

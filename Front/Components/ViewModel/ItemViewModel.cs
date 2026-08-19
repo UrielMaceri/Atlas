@@ -17,35 +17,53 @@ namespace Front;
 public class ItemViewModel : ReactiveObject
 {
     private string _name;
+    private string _description;
     private string _newName = string.Empty;
     private string _newDescription = string.Empty;
     private int _newCategory = 0;
-    private bool _isEditing;
+    private CategoryViewModel? _selectedCategory;
+    private bool _isEditingName;
+    private bool _isEditingCategory;
 
     public string Name
     {
         get => _name;
         private set => this.RaiseAndSetIfChanged(ref _name, value);
     }
+    public string Description
+    {
+        get => _description;
+        private set => this.RaiseAndSetIfChanged(ref _description, value);
+    }
     public string NewName
     {
         get => _newName;
-        private set => this.RaiseAndSetIfChanged(ref _newName, value);
+        set => this.RaiseAndSetIfChanged(ref _newName, value);
     }
     public string NewDescription
     {
         get => _newDescription;
-        private set => this.RaiseAndSetIfChanged(ref _newDescription, value);
+        set => this.RaiseAndSetIfChanged(ref _newDescription, value);
     }
     public int NewCategory
     {
         get => _newCategory;
         private set => this.RaiseAndSetIfChanged(ref _newCategory, value);
     }
+    public CategoryViewModel? SelectedCategory
+    {
+        get => _selectedCategory;
+        set => this.RaiseAndSetIfChanged(ref _selectedCategory, value);
+    }
     public bool IsEditingName
     {
-        get => _isEditing;
-        private set => this.RaiseAndSetIfChanged(ref _isEditing, value);
+        get => _isEditingName;
+        private set => this.RaiseAndSetIfChanged(ref _isEditingName, value);
+    }
+    public bool IsEditingCategory
+    {
+        get => _isEditingCategory;
+        private set => this.RaiseAndSetIfChanged(ref _isEditingCategory, value);
     }
 
     public ICommand OpenFileCommand { get; }
@@ -69,6 +87,8 @@ public class ItemViewModel : ReactiveObject
     }
     
     public ObservableCollection<TagViewModel> TagsInItem { get; } = new();
+    public ObservableCollection<CategoryViewModel> CategoriesInWorkspace =>
+        _parent?.WorkspaceTab.Categories ?? new ObservableCollection<CategoryViewModel>();
     public Action<string>? ShowNotification { get; set; }
     
     public ItemViewModel(Item item, CategoryViewModel? parent = null, Action<string>? showNotification = null)
@@ -76,7 +96,9 @@ public class ItemViewModel : ReactiveObject
         Item = item;
         _parent  = parent;
         _name    = item.Name;
+        _description = item.Description;
         ShowNotification = showNotification;
+
         // icon path is now handled via IconBitmap; raw path left on Item.IconPath
 
         // Load bitmap for the icon (file path saved in Item.IconPath)
@@ -124,30 +146,65 @@ public class ItemViewModel : ReactiveObject
 
         OpenFileCommand = new RelayCommand(OpenFile);
         DeleteItemCommand = new RelayCommand(DeleteItem);    
+        
         RenameItemCommand = new RelayCommand(() =>
+        {
+            NewName = Name;
+            NewDescription = Description;
+            IsEditingName = true;
+        });
+        RenameCommit = new RelayCommand(() =>
             {
-                var service = App.Services.GetRequiredService<ItemService>();
-                if (NewName == string.Empty)
+                if (string.IsNullOrWhiteSpace(NewName))
                 {
-                    NewName = item.Name;
-                }
-                if (NewDescription == string.Empty)
-                {
-                    NewDescription = item.Description;
-                }
-                service.Update(item.Id, NewName, NewDescription, item.Path, item.IconPath, item.CategoryId, item.IsFavorite);
-            }
-        );
-        ChangeCategoryCommand = new RelayCommand(() =>
-            {
-                var service = App.Services.GetRequiredService<ItemService>();
-                if (NewCategory == item.CategoryId || NewCategory == 0)
-                {
+                    ShowNotification?.Invoke("The item name is required.");
                     return;
                 }
-                service.Update(item.Id, item.Name, item.Description, item.Path, item.IconPath, NewCategory, item.IsFavorite);
+
+                var service = App.Services.GetRequiredService<ItemService>();
+                service.Update(item.Id, NewName, NewDescription, item.Path, item.IconPath, item.CategoryId, item.IsFavorite);
+                item.Name = NewName.Trim();
+                item.Description = NewDescription.Trim();
+                Name = item.Name;
+                Description = item.Description;
+                IsEditingName = false;
             }
-        );     
+        );
+        RenameCancel = new RelayCommand(() =>
+            {
+                IsEditingName = false;
+            }
+        );
+
+        ChangeCategoryCommand = new RelayCommand(() =>
+        {
+            SelectedCategory = null;
+            IsEditingCategory = true;
+        });
+        ChangeCategoryCommit = new RelayCommand(() =>
+        {
+            if (SelectedCategory is null)
+                return;
+
+            if (SelectedCategory.Category.Id == item.CategoryId)
+            {
+                IsEditingCategory = false;
+                return;
+            }
+
+            var service = App.Services.GetRequiredService<ItemService>();
+            service.Update(item.Id, item.Name, item.Description, item.Path, item.IconPath,
+                SelectedCategory.Category.Id, item.IsFavorite);
+            item.CategoryId = SelectedCategory.Category.Id;
+            _parent?.LoadItems(_parent.Category.Id);
+            SelectedCategory.LoadItems(SelectedCategory.Category.Id);
+            IsEditingCategory = false;
+        });
+        ChangeCategoryCancel = new RelayCommand(() =>
+        {
+            IsEditingCategory = false;
+            SelectedCategory = null;
+        });
     }
 
     private void OpenFile()

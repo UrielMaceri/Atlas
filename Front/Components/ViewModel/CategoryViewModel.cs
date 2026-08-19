@@ -38,6 +38,7 @@ public class CategoryViewModel : ReactiveObject
     public ICommand CancelRenameCategory { get; }
 
     public Category Category { get; }
+    public WorkspaceTabViewModel WorkspaceTab => _parent;
     private readonly WorkspaceTabViewModel _parent;
     public ObservableCollection<ItemViewModel> ItemsInCategory { get; } = new();
     public Action<string>? ShowNotification { get; set; }
