@@ -43,7 +43,7 @@ public class AtlasDbContext : DbContext
             entity.HasMany(category=> category.Items)
                 .WithOne(item=> item.Category)
                 .HasForeignKey(item=> item.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Item>(entity =>
