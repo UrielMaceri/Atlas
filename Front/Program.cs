@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using Velopack;
 
 namespace Front;
 
@@ -8,6 +9,8 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        VelopackApp.Build().Run();
+        
         try
         {
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
