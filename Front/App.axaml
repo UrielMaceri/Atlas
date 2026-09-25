@@ -3,7 +3,7 @@
              x:Class="Front.App"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+            <!-- Future feature: Themes-->
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Atlas/Components/Styles/General.axaml" />
