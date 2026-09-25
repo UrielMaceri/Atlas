@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Back.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Velopack;
@@ -45,13 +46,16 @@ public partial class App : Application
                     var mainWindow = desktop.MainWindow as MainWindow;
                     if (mainWindow?.DataContext is MainWindowViewModel viewModel)
                     {
-                        viewModel.ShowNotification(
-                            $"Update available: {version}. Restart Atlas to install it.");
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                            viewModel.ShowNotification(
+                                $"Update available: {version}. Restart Atlas to install it."));
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // If this fails means some error at Github. Doesn't matter, it just won't update enything 
+                    System.IO.File.WriteAllText(
+                        System.IO.Path.Combine(AppContext.BaseDirectory, "update-check.log"),
+                        ex.ToString());
                 }
             });
         }
