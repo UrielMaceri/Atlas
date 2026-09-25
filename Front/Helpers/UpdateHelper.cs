@@ -22,4 +22,9 @@ public sealed class UpdateService
         _manager.ApplyUpdatesAndRestart(update);
     }
 
+    public string GetVersion()
+    {
+        return _manager.CurrentVersion?.ToString() ?? "dev";
+    }
+
 }

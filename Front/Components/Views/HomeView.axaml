@@ -7,7 +7,9 @@
     <ScrollViewer Padding="24">
         <StackPanel Spacing="20">
 
+            <TextBlock Classes="page-title-version" Text="{Binding Version, StringFormat='Version: {0}'}" />
             <TextBlock Classes="page-title" Text="Workspaces" />
+
 
             <!-- Empty state -->
             <TextBlock Classes="empty-state"

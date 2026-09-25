@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
@@ -40,7 +41,10 @@ public class HomeViewModel : ReactiveObject
         DeleteConfirmationAction?.Invoke(card) ?? Task.CompletedTask;
 
     internal void RemoveCard(WorkspaceCardViewModel card) => Workspaces.Remove(card);
-}
+    
+    private static UpdateService Updater = new();
+    public string Version { get;} = Updater.GetVersion();
+} 
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -52,6 +56,7 @@ public class WorkspaceCardViewModel : ReactiveObject
     private bool _isEditing;
     private string _editingName = string.Empty;
     private string _editingDescription = string.Empty;
+    
 
     public Workspace Workspace { get; }
 
