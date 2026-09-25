@@ -48,8 +48,10 @@ public partial class App : Application
                     {
                         await Dispatcher.UIThread.InvokeAsync(() =>
                             viewModel.ShowNotification(
-                                $"Update available: {version}. Restart Atlas to install it."));
+                                $"Downloading update {version}..."));
                     }
+
+                    await Updater.DownloadAndRestartAsync(update);
                 }
                 catch (Exception ex)
                 {
