@@ -34,6 +34,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
+            var mainWindowViewModel = (MainWindowViewModel)desktop.MainWindow.DataContext!;
             _ = Task.Run(async () =>
             {
                 try
@@ -43,13 +44,9 @@ public partial class App : Application
                         return;
 
                     var version = update.TargetFullRelease.Version;
-                    var mainWindow = desktop.MainWindow as MainWindow;
-                    if (mainWindow?.DataContext is MainWindowViewModel viewModel)
-                    {
-                        await Dispatcher.UIThread.InvokeAsync(() =>
-                            viewModel.ShowNotification(
-                                $"Downloading update {version}..."));
-                    }
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                        mainWindowViewModel.ShowNotification(
+                            $"Downloading update {version}..."));
 
                     await Updater.DownloadAndRestartAsync(update);
                 }
