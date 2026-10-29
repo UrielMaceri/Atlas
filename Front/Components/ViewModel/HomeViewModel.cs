@@ -18,11 +18,24 @@ public class HomeViewModel : ReactiveObject
     /// <summary>Set by MainWindowViewModel so cards can open a tab.</summary>
     public Action<Workspace>? OpenWorkspaceAction { get; set; }
 
+    /// <summary>Set by MainWindowViewModel to display update status.</summary>
+    public Action<string>? NotificationAction { get; set; }
+
     /// <summary>Set by HomeView so deletion can be confirmed before it is performed.</summary>
     public Func<WorkspaceCardViewModel, Task>? DeleteConfirmationAction { get; set; }
 
+    private bool _isUpdating;
+    public bool IsUpdating
+    {
+        get => _isUpdating;
+        private set => this.RaiseAndSetIfChanged(ref _isUpdating, value);
+    }
+
+    public ICommand UpdateCommand { get; }
+
     public HomeViewModel()
     {
+        UpdateCommand = new RelayCommand(() => _ = UpdateAsync());
         Refresh();
     }
 
@@ -41,6 +54,36 @@ public class HomeViewModel : ReactiveObject
         DeleteConfirmationAction?.Invoke(card) ?? Task.CompletedTask;
 
     internal void RemoveCard(WorkspaceCardViewModel card) => Workspaces.Remove(card);
+
+    private async Task UpdateAsync()
+    {
+        if (IsUpdating)
+            return;
+
+        IsUpdating = true;
+        try
+        {
+            NotificationAction?.Invoke("Checking for updates...");
+            var update = await Updater.Check();
+            if (update is null)
+            {
+                NotificationAction?.Invoke("Atlas is up to date.");
+                return;
+            }
+
+            var version = update.TargetFullRelease.Version;
+            NotificationAction?.Invoke($"Downloading update {version}...");
+            await Updater.DownloadAndRestartAsync(update);
+        }
+        catch (Exception ex)
+        {
+            NotificationAction?.Invoke($"Update failed: {ex.Message}");
+        }
+        finally
+        {
+            IsUpdating = false;
+        }
+    }
     
     private static UpdateService Updater = new();
     public string Version { get;} = Updater.GetVersion();

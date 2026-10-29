@@ -58,6 +58,7 @@ public class MainWindowViewModel : ReactiveObject
         service.WorkspaceDeleted += OnWorkspaceDeleted;
         HomeTab = new HomeTabSentinel();
         HomeTab.ViewModel.OpenWorkspaceAction = OpenWorkspace;
+        HomeTab.ViewModel.NotificationAction = ShowNotification;
 
         SelectHomeCommand    = new RelayCommand(SelectHome);
         AddNewWorkspaceCommand = new RelayCommand(AddNewWorkspace);
