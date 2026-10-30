@@ -15,10 +15,21 @@ public partial class CategoryRowView : UserControl
     {
         InitializeComponent();
         AddHandler(DragDrop.DropEvent, OnItemDropped, handledEventsToo: true);
+        AddHandler(DragDrop.DragEnterEvent, OnItemEntered, handledEventsToo: true);
+        AddHandler(DragDrop.DragOverEvent, OnItemOver, handledEventsToo: true);
+        AddHandler(DragDrop.DragLeaveEvent, OnItemLeft, handledEventsToo: true);
+    }
+
+    public void SetDropOutlineVisible(bool isVisible)
+    {
+        DropOutlineIndicator.IsVisible = isVisible;
     }
 
     private void OnItemDropped(object? sender, DragEventArgs e)
     {
+        DropOutlineIndicator.IsVisible = false;
+        DropHereIndicator.IsVisible = false;
+
         if (DataContext is not CategoryViewModel categoryVm)
             return;
 
@@ -46,5 +57,20 @@ public partial class CategoryRowView : UserControl
         }
 
         e.Handled = true;
+    }
+
+    private void OnItemEntered(object? sender, DragEventArgs e)
+    {
+        DropHereIndicator.IsVisible = e.DataTransfer.Contains(DataFormat.File);
+    }
+
+    private void OnItemOver(object? sender, DragEventArgs e)
+    {
+        DropHereIndicator.IsVisible = e.DataTransfer.Contains(DataFormat.File);
+    }
+
+    private void OnItemLeft(object? sender, DragEventArgs e)
+    {
+        DropHereIndicator.IsVisible = false;
     }
 }

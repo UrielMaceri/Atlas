@@ -47,22 +47,25 @@
             </Border>
 
             <!-- Content area - Categories and Items -->
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel Margin="16" Spacing="12">
-                    <Button Content="+ New Category"
-                            HorizontalAlignment="Left"
-                            Command="{Binding AddNewCategory}"
-                            Width="140" 
-                            IsVisible="{Binding !IsNew}"/>
-                    <ItemsControl ItemsSource="{Binding Categories}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="local:CategoryViewModel">
-                                <local:CategoryRowView/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>
+            <Grid x:Name="CategoryDropSurface"
+                  DragDrop.AllowDrop="True">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="16" Spacing="12">
+                        <Button Content="+ New Category"
+                                HorizontalAlignment="Left"
+                                Command="{Binding AddNewCategory}"
+                                Width="140"
+                                IsVisible="{Binding !IsNew}"/>
+                        <ItemsControl ItemsSource="{Binding Categories}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:CategoryViewModel">
+                                    <local:CategoryRowView/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
         </DockPanel>
 
         <!-- Create category modal overlay -->

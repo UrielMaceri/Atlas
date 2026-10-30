@@ -3,7 +3,7 @@
         xmlns:local="clr-namespace:Front"
         x:Class="Front.MainWindow"
         x:DataType="local:MainWindowViewModel"
-        Title="Atlas"
+        Title="Urielchoy's Atlas"
         Width="1100" Height="700"
         MinWidth="700" MinHeight="450"
         Background="#1a1a1a"
@@ -18,7 +18,7 @@
             <DockPanel LastChildFill="False">
                 <!-- Title text -->
                 <TextBlock Classes="title-text"
-                           Text="Atlas"
+                           Text="Urielchoy's Atlas"
                            DockPanel.Dock="Left"/>
 
                 <!-- Window control buttons -->

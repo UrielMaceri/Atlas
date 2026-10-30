@@ -39,7 +39,7 @@
                 <StackPanel HorizontalAlignment="Center"
                             VerticalAlignment="Center">
                     <Image Source="{Binding IconBitmap}"
-                        Width="32"
+                        Width="40"
                         Stretch="Uniform" />
                     <TextBlock Text="{Binding Name}"
                             Margin="0,4,0,0"

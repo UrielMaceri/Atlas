@@ -14,8 +14,13 @@
                 <Button Classes="action-button"
                         Content="Update"
                         Command="{Binding UpdateCommand}"
-                        IsEnabled="{Binding !IsUpdating}" />
+                        IsVisible="{Binding IsUpdateButtonVisible}"
+                        IsEnabled="{Binding !IsUpdateBusy}" />
             </StackPanel>
+            <TextBlock Text="{Binding UpdateStatusMessage}"
+                       IsVisible="{Binding HasUpdateStatusMessage}"
+                       Foreground="#ffcc66"
+                       TextWrapping="Wrap" />
             <TextBlock Classes="page-title" Text="Workspaces" />
 
 

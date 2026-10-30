@@ -4,7 +4,7 @@
              x:Class="Front.CategoryRowView"
              x:DataType="local:CategoryViewModel"
              DragDrop.AllowDrop="True">
-    <DockPanel>
+    <Grid>
         <Border BorderBrush="#3a3a3a"
                 BorderThickness="1"
                 CornerRadius="8"
@@ -73,6 +73,31 @@
                 </ScrollViewer>
             </DockPanel>
         </Border>
-    </DockPanel>
 
+        <Rectangle x:Name="DropOutlineIndicator"
+                   IsVisible="False"
+                   IsHitTestVisible="False"
+                   Margin="0,0,0,8"
+                   Stroke="#555555"
+                   StrokeThickness="2"
+                   StrokeDashArray="6,4"
+                   RadiusX="8"
+                   RadiusY="8"/>
+
+        <Border x:Name="DropHereIndicator"
+                IsVisible="False"
+                IsHitTestVisible="False"
+                Background="#CC181818"
+                BorderBrush="#555555"
+                BorderThickness="2"
+                CornerRadius="8"
+                Margin="0,0,0,8">
+            <TextBlock Text="Drop Here"
+                       Foreground="White"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
 </UserControl>

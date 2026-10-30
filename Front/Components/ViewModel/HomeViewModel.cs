@@ -24,12 +24,38 @@ public class HomeViewModel : ReactiveObject
     /// <summary>Set by HomeView so deletion can be confirmed before it is performed.</summary>
     public Func<WorkspaceCardViewModel, Task>? DeleteConfirmationAction { get; set; }
 
-    private bool _isUpdating;
-    public bool IsUpdating
+    private bool _isUpdateAvailable;
+    public bool IsUpdateAvailable
     {
-        get => _isUpdating;
-        private set => this.RaiseAndSetIfChanged(ref _isUpdating, value);
+        get => _isUpdateAvailable;
+        private set
+        {
+            this.RaiseAndSetIfChanged(ref _isUpdateAvailable, value);
+            this.RaisePropertyChanged(nameof(IsUpdateButtonVisible));
+        }
     }
+
+    private bool _isUpdateBusy;
+    public bool IsUpdateBusy
+    {
+        get => _isUpdateBusy;
+        private set => this.RaiseAndSetIfChanged(ref _isUpdateBusy, value);
+    }
+
+    private string _updateStatusMessage = string.Empty;
+    public string UpdateStatusMessage
+    {
+        get => _updateStatusMessage;
+        private set
+        {
+            this.RaiseAndSetIfChanged(ref _updateStatusMessage, value);
+            this.RaisePropertyChanged(nameof(HasUpdateStatusMessage));
+        }
+    }
+
+    public bool IsDevelopmentVersion => Version == "dev";
+    public bool IsUpdateButtonVisible => IsDevelopmentVersion || IsUpdateAvailable;
+    public bool HasUpdateStatusMessage => !string.IsNullOrEmpty(UpdateStatusMessage);
 
     public ICommand UpdateCommand { get; }
 
@@ -37,6 +63,7 @@ public class HomeViewModel : ReactiveObject
     {
         UpdateCommand = new RelayCommand(() => _ = UpdateAsync());
         Refresh();
+        _ = CheckForUpdatesOnStartupAsync();
     }
 
     public void Refresh()
@@ -55,33 +82,60 @@ public class HomeViewModel : ReactiveObject
 
     internal void RemoveCard(WorkspaceCardViewModel card) => Workspaces.Remove(card);
 
-    private async Task UpdateAsync()
+    private async Task CheckForUpdatesOnStartupAsync()
     {
-        if (IsUpdating)
-            return;
-
-        IsUpdating = true;
+        IsUpdateBusy = true;
+        UpdateStatusMessage = "Checking for updates...";
         try
         {
-            NotificationAction?.Invoke("Checking for updates...");
+            var update = await Updater.Check();
+            IsUpdateAvailable = update is not null;
+            UpdateStatusMessage = IsUpdateAvailable
+                ? "There are updates pending, please update."
+                : string.Empty;
+        }
+        catch (Exception ex)
+        {
+            UpdateStatusMessage = $"Could not check for updates: {ex.Message}";
+        }
+        finally
+        {
+            IsUpdateBusy = false;
+        }
+    }
+
+    private async Task UpdateAsync()
+    {
+        if (IsUpdateBusy)
+            return;
+
+        IsUpdateBusy = true;
+        try
+        {
+            UpdateStatusMessage = "Checking for updates...";
             var update = await Updater.Check();
             if (update is null)
             {
+                IsUpdateAvailable = false;
+                UpdateStatusMessage = string.Empty;
                 NotificationAction?.Invoke("Atlas is up to date.");
                 return;
             }
 
+            IsUpdateAvailable = true;
+            UpdateStatusMessage = "There are updates pending, please update.";
             var version = update.TargetFullRelease.Version;
             NotificationAction?.Invoke($"Downloading update {version}...");
             await Updater.DownloadAndRestartAsync(update);
         }
         catch (Exception ex)
         {
+            UpdateStatusMessage = $"Update failed: {ex.Message}";
             NotificationAction?.Invoke($"Update failed: {ex.Message}");
         }
         finally
         {
-            IsUpdating = false;
+            IsUpdateBusy = false;
         }
     }
     
