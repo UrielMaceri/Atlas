@@ -36,6 +36,20 @@
                             <PathIcon Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
                                       Width="14" Height="14"/>
                         </Button>
+                        <Button Classes="icon-btn"
+                                ToolTip.Tip="Move category up"
+                                Command="{Binding MoveUp}"
+                                IsVisible="{Binding CanMoveUp}">
+                            <PathIcon Data="M7.41,15.41 L12,10.83 L16.59,15.42 L18,14 L12,8 L6,14 Z"
+                                      Width="22" Height="22"/>
+                        </Button>
+                        <Button Classes="icon-btn"
+                                ToolTip.Tip="Move category down"
+                                Command="{Binding MoveDown}"
+                                IsVisible="{Binding CanMoveDown}">
+                            <PathIcon Data="M7.41,8.59 L12,13.17 L16.59,8.58 L18,10 L12,16 L6,10 Z"
+                                      Width="22" Height="22"/>
+                        </Button>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"

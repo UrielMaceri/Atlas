@@ -80,6 +80,8 @@ public class ItemRepo : IItem
             .Include(i => i.Category)
             .Include(i => i.Tags)
             .Where(i => i.CategoryId == categoryId)
+            .OrderBy(i => i.SortOrder)
+            .ThenBy(i => i.Id)
             .ToList();
     }
 

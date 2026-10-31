@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Back.Classes;
 using Back.Data;
 using Back.Repositories.Interfaces;
@@ -76,7 +77,16 @@ public class CategoryRepo : ICategory
         return _context.Categories
             .Include(c => c.Items)
             .Where(c => c.WorkspaceId == workspaceId)
+            .OrderBy(c => c.SortOrder)
+            .ThenBy(c => c.Id)
             .ToList();
+    }
+
+    public Category? GetByPosition(int workspaceId, int sortOrder)
+    {
+        return _context.Categories
+            .OrderBy(c => c.Id)
+            .FirstOrDefault(c => c.WorkspaceId == workspaceId && c.SortOrder == sortOrder);
     }
 
     public int GetMaxSortOrderByWorkspace(int workspaceId)

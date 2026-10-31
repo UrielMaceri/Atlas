@@ -12,6 +12,8 @@ public class CategoryViewModel : ReactiveObject
     private string _name;
     private bool _isEditingName;
     private string _editingName = string.Empty;
+    private bool _canMoveUp;
+    private bool _canMoveDown;
     private readonly Action<string>? _showNotification;
 
     public string Name
@@ -32,16 +34,31 @@ public class CategoryViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref _editingName, value);
     }
 
+    public bool CanMoveUp
+    {
+        get => _canMoveUp;
+        private set => this.RaiseAndSetIfChanged(ref _canMoveUp, value);
+    }
+
+    public bool CanMoveDown
+    {
+        get => _canMoveDown;
+        private set => this.RaiseAndSetIfChanged(ref _canMoveDown, value);
+    }
+    
     public ICommand RenameCategory { get; }
     public ICommand DeleteCategory { get; }
     public ICommand CommitRenameCategory { get; }
     public ICommand CancelRenameCategory { get; }
+    public ICommand MoveUp { get; }
+    public ICommand MoveDown { get; }
 
     public Category Category { get; }
     public WorkspaceTabViewModel WorkspaceTab => _parent;
     private readonly WorkspaceTabViewModel _parent;
     public ObservableCollection<ItemViewModel> ItemsInCategory { get; } = new();
     public Action<string>? ShowNotification { get; set; }
+    private enum Direction { Forward, Backward };
 
     public ObservableCollection<ItemViewModel> LoadItems(int categoryId)
     {
@@ -61,13 +78,18 @@ public class CategoryViewModel : ReactiveObject
     public CategoryViewModel(Category category, WorkspaceTabViewModel parent, Action<string>? showNotification = null)
     {
         Category = category;
+        _showNotification = showNotification;
         _parent  = parent;
         _name    = category.Name;
-        _showNotification = showNotification;
 
         // Load this category's items from the DB
-        var service = App.Services.GetRequiredService<ItemService>();
-        var items   = service.GetByCategory(category.Id);
+        var categoryService = App.Services.GetRequiredService<CategoryService>();
+        var itemService = App.Services.GetRequiredService<ItemService>();
+        var items   = itemService.GetByCategory(category.Id);
+
+        var lastCategory = categoryService.GetMaxValue(category.WorkspaceId);
+        CanMoveUp = Category.SortOrder > 1;
+        CanMoveDown = Category.SortOrder < lastCategory;
 
         foreach (var item in items)
         {
@@ -85,8 +107,7 @@ public class CategoryViewModel : ReactiveObject
         {
             if (ItemsInCategory.Count == 0)
             {
-                var svc = App.Services.GetRequiredService<CategoryService>();
-                svc.Delete(Category.Id);
+                categoryService.Delete(Category.Id);
                 _parent.LoadCategories(_parent.Workspace.Id);
             } else
             {
@@ -99,8 +120,7 @@ public class CategoryViewModel : ReactiveObject
             var trimmed = (EditingName ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(trimmed)) trimmed = Name;
 
-            var svc = App.Services.GetRequiredService<CategoryService>();
-            svc.Update(Category.Id, trimmed, Category.Description ?? string.Empty);
+            categoryService.Update(Category.Id, trimmed, Category.Description ?? string.Empty);
 
             // Update local state and refresh parent list
             Category.Name = trimmed;
@@ -114,5 +134,18 @@ public class CategoryViewModel : ReactiveObject
             IsEditingName = false;
             EditingName = Name;
         });
+
+        MoveUp = new RelayCommand(() =>
+        {
+            categoryService.UpdateSorting(Category.Id, (int)Direction.Backward);
+            _parent.LoadCategories(_parent.Workspace.Id);
+        });
+        MoveDown = new RelayCommand(() =>
+        {
+            categoryService.UpdateSorting(Category.Id, (int)Direction.Forward);
+            _parent.LoadCategories(_parent.Workspace.Id);
+        });
+
+        
     }
 }

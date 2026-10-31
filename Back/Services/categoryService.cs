@@ -95,4 +95,42 @@ public class CategoryService
 
         return _categoryRepository.GetByWorkspace(workspaceId) ?? new List<Category>();
     }
+
+    public void UpdateSorting(int id, int direction)
+    {
+        var category = _categoryRepository.GetById(id);
+        if (category == null)
+            throw new KeyNotFoundException($"Category with id {id} was not found.");
+
+        if (direction == 0)  //Direction 0 is forward, 1 is backwards
+        {
+            var nextCategory = _categoryRepository.GetByPosition(category.WorkspaceId, category.SortOrder+1);
+            if (nextCategory == null)
+                throw new KeyNotFoundException($"Category with sort order {category.SortOrder+1} was not found.");
+            
+            var oldSortOrder = category.SortOrder;
+            category.SortOrder = nextCategory.SortOrder;
+            _categoryRepository.Update(category);
+
+            nextCategory.SortOrder = oldSortOrder;
+            _categoryRepository.Update(nextCategory);
+        }
+        else
+        {
+            var previousCategory = _categoryRepository.GetByPosition(category.WorkspaceId, category.SortOrder-1);
+            if (previousCategory == null)
+                throw new KeyNotFoundException($"Category with sort order {category.SortOrder-1} was not found.");
+            
+            var oldSortOrder = category.SortOrder;
+            category.SortOrder = previousCategory.SortOrder;
+            _categoryRepository.Update(category);
+
+            previousCategory.SortOrder = oldSortOrder;
+            _categoryRepository.Update(previousCategory);
+        }
+    }
+    public int GetMaxValue(int workspaceId)
+    {
+        return _categoryRepository.GetMaxSortOrderByWorkspace(workspaceId);
+    }
 }
