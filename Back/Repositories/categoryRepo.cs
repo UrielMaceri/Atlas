@@ -57,6 +57,16 @@ public class CategoryRepo : ICategory
             throw new Exception($"Category {id} not found.");
         }
 
+        var categoriesAfterDeleted = _context.Categories
+            .Where(c => c.WorkspaceId == categoryToDelete.WorkspaceId
+                && c.SortOrder > categoryToDelete.SortOrder)
+            .ToList();
+
+        foreach (var category in categoriesAfterDeleted)
+        {
+            category.SortOrder--;
+        }
+
         _context.Categories.Remove(categoryToDelete);
         _context.SaveChanges();
     }
@@ -67,5 +77,12 @@ public class CategoryRepo : ICategory
             .Include(c => c.Items)
             .Where(c => c.WorkspaceId == workspaceId)
             .ToList();
+    }
+
+    public int GetMaxSortOrderByWorkspace(int workspaceId)
+    {
+        return _context.Categories
+            .Where(c => c.WorkspaceId == workspaceId)
+            .Max(c => (int?)c.SortOrder) ?? 0;
     }
 }

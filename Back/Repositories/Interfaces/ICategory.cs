@@ -17,5 +17,5 @@ public interface ICategory
 
     // User
     List<Category>? GetByWorkspace(int workspaceId);
+    int GetMaxSortOrderByWorkspace(int workspaceId);
 }
-

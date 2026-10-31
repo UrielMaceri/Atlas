@@ -17,6 +17,7 @@ public interface IItem
 
     // User
     List<Item>? GetByCategory(int categoryId);
+    int GetMaxSortOrderByCategory(int categoryId);
     List<Item>? GetFavs();
     
     List<Item>? GetByTag(int tagId); // join table
@@ -31,4 +32,3 @@ public interface IItem
     
     then just call itemRepo.UpdateItemTags instead of regular Update */
 }
-

@@ -5,4 +5,5 @@ public class Category : BaseEntity
     public int WorkspaceId { get; set; }
     public Workspace? Workspace { get; set; }
     public List<Item> Items { get; set; } = new();
+    public int SortOrder { get; set; } = 0;
 }

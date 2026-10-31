@@ -60,6 +60,16 @@ public class ItemRepo : IItem
             throw new Exception($"Item {id} not found.");
         }
 
+        var itemsAfterDeleted = _context.Items
+            .Where(i => i.CategoryId == itemToDelete.CategoryId
+                && i.SortOrder > itemToDelete.SortOrder)
+            .ToList();
+
+        foreach (var item in itemsAfterDeleted)
+        {
+            item.SortOrder--;
+        }
+
         _context.Items.Remove(itemToDelete);
         _context.SaveChanges();
     }
@@ -71,6 +81,13 @@ public class ItemRepo : IItem
             .Include(i => i.Tags)
             .Where(i => i.CategoryId == categoryId)
             .ToList();
+    }
+
+    public int GetMaxSortOrderByCategory(int categoryId)
+    {
+        return _context.Items
+            .Where(i => i.CategoryId == categoryId)
+            .Max(i => (int?)i.SortOrder) ?? 0;
     }
 
     public List<Item> GetFavs()

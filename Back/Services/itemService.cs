@@ -53,7 +53,8 @@ public class ItemService
             Path = string.IsNullOrWhiteSpace(path) ? string.Empty : path.Trim(),
             IconPath = string.IsNullOrWhiteSpace(iconPath) ? string.Empty : iconPath.Trim(),
             CategoryId = categoryId,
-            IsFavorite = isFavorite
+            IsFavorite = isFavorite,
+            SortOrder = _itemRepository.GetMaxSortOrderByCategory(categoryId) + 1
         };
 
         _itemRepository.Insert(item);

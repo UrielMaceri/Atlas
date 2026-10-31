@@ -47,7 +47,8 @@ public class CategoryService
         {
             Name = name.Trim(),
             Description = string.IsNullOrWhiteSpace(description) ? string.Empty : description.Trim(),
-            WorkspaceId = workspaceId
+            WorkspaceId = workspaceId,
+            SortOrder = _categoryRepository.GetMaxSortOrderByWorkspace(workspaceId) + 1
         };
 
         _categoryRepository.Insert(category);

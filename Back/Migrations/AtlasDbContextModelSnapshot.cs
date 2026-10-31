@@ -30,6 +30,9 @@ namespace Back.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("WorkspaceId")
                         .HasColumnType("INTEGER");
 
@@ -67,6 +70,9 @@ namespace Back.Migrations
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
