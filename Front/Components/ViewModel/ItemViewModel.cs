@@ -24,6 +24,8 @@ public class ItemViewModel : ReactiveObject
     private CategoryViewModel? _selectedCategory;
     private bool _isEditingName;
     private bool _isEditingCategory;
+    private bool _canMoveUp;
+    private bool _canMoveDown;
 
     public string Name
     {
@@ -65,6 +67,17 @@ public class ItemViewModel : ReactiveObject
         get => _isEditingCategory;
         private set => this.RaiseAndSetIfChanged(ref _isEditingCategory, value);
     }
+    public bool CanMoveUp
+    {
+        get => _canMoveUp;
+        private set => this.RaiseAndSetIfChanged(ref _canMoveUp, value);
+    }
+
+    public bool CanMoveDown
+    {
+        get => _canMoveDown;
+        private set => this.RaiseAndSetIfChanged(ref _canMoveDown, value);
+    }
 
     public ICommand OpenFileCommand { get; }
     public ICommand OpenPathCommand { get; }
@@ -75,6 +88,8 @@ public class ItemViewModel : ReactiveObject
     public ICommand ChangeCategoryCommand { get; }
     public ICommand ChangeCategoryCommit { get; }
     public ICommand ChangeCategoryCancel { get; }
+    public ICommand MoveUp { get; }
+    public ICommand MoveDown { get; }
 
     public string FilePath => Item.Path;
 
@@ -91,6 +106,7 @@ public class ItemViewModel : ReactiveObject
     public ObservableCollection<CategoryViewModel> CategoriesInWorkspace =>
         _parent?.WorkspaceTab.Categories ?? new ObservableCollection<CategoryViewModel>();
     public Action<string>? ShowNotification { get; set; }
+    private enum Direction { Forward, Backward };
     
     public ItemViewModel(Item item, CategoryViewModel? parent = null, Action<string>? showNotification = null)
     {
@@ -99,6 +115,13 @@ public class ItemViewModel : ReactiveObject
         _name    = item.Name;
         _description = item.Description;
         ShowNotification = showNotification;
+
+        var itemService = App.Services.GetRequiredService<ItemService>();
+
+        var lastItem = itemService.GetMaxValue(item.CategoryId);
+        CanMoveUp = item.SortOrder > 1;
+        CanMoveDown = item.SortOrder < lastItem;
+
 
         // icon path is now handled via IconBitmap; raw path left on Item.IconPath
 
@@ -207,6 +230,17 @@ public class ItemViewModel : ReactiveObject
             IsEditingCategory = false;
             SelectedCategory = null;
         });
+
+        MoveUp = new RelayCommand(() =>
+        {
+            itemService.UpdateSorting(Item.Id, (int)Direction.Backward);
+            _parent?.LoadItems(_parent.Category.Id);
+        });
+        MoveDown = new RelayCommand(() =>
+        {
+            itemService.UpdateSorting(Item.Id, (int)Direction.Forward);
+            _parent?.LoadItems(_parent.Category.Id);
+        });
     }
 
     private void OpenFile()
@@ -259,4 +293,5 @@ public class ItemViewModel : ReactiveObject
             ShowNotification?.Invoke($"Unable to open file: {ex.Message}");
         }
     }
+    
 }

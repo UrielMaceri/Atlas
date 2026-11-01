@@ -108,6 +108,44 @@ public class ItemService
             return _itemRepository.GetFavs() ?? new List<Item>();
     }
 
+    public void UpdateSorting(int id, int direction)
+    {
+        var item = _itemRepository.GetById(id);
+        if (item == null)
+            throw new KeyNotFoundException($"Item with id {id} was not found.");
+
+        if (direction == 0)  //Direction 0 is forward, 1 is backwards
+        {
+            var nextItem = _itemRepository.GetByPosition(item.CategoryId, item.SortOrder+1);
+            if (nextItem == null)
+                throw new KeyNotFoundException($"Item with sort order {item.SortOrder+1} was not found.");
+            
+            var oldSortOrder = item.SortOrder;
+            item.SortOrder = nextItem.SortOrder;
+            _itemRepository.Update(item);
+
+            nextItem.SortOrder = oldSortOrder;
+            _itemRepository.Update(nextItem);
+        }
+        else
+        {
+            var previousItem = _itemRepository.GetByPosition(item.CategoryId, item.SortOrder-1);
+            if (previousItem == null)
+                throw new KeyNotFoundException($"item with sort order {item.SortOrder-1} was not found.");
+            
+            var oldSortOrder = item.SortOrder;
+            item.SortOrder = previousItem.SortOrder;
+            _itemRepository.Update(item);
+
+            previousItem.SortOrder = oldSortOrder;
+            _itemRepository.Update(previousItem);
+        }
+    }
+    public int GetMaxValue(int categoryId)
+    {
+        return _itemRepository.GetMaxSortOrderByCategory(categoryId);
+    }
+
 
     // ------------ JOIN TABLE METHODS ------------     
     public List<Item> GetByTag(int tagId)

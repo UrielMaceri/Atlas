@@ -85,6 +85,13 @@ public class ItemRepo : IItem
             .ToList();
     }
 
+    public Item? GetByPosition(int categoryId, int sortOrder)
+    {
+        return _context.Items
+            .OrderBy(i => i.Id)
+            .FirstOrDefault(i => i.CategoryId == categoryId && i.SortOrder == sortOrder);
+    }
+
     public int GetMaxSortOrderByCategory(int categoryId)
     {
         return _context.Items

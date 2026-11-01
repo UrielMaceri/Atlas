@@ -106,6 +106,30 @@
         <Setter Property="Foreground" Value="#ff6b6b" />
     </Style>
 
+    <Style Selector="Button.item-move-btn">
+        <Setter Property="IsVisible" Value="False" />
+        <Setter Property="Background" Value="#252525" />
+        <Setter Property="Foreground" Value="#aaaaaa" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+    <Style Selector="Grid.item-tile:pointerover Button.item-move-btn">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="Button.item-move-btn:pointerover">
+        <Setter Property="Background" Value="#3a3a3a" />
+        <Setter Property="Foreground" Value="#dddddd" />
+    </Style>
+    <Style Selector="Button.item-move-btn:disabled">
+        <Setter Property="Foreground" Value="#666666" />
+    </Style>
+    <Style Selector="Button.item-move-btn:disabled PathIcon">
+        <Setter Property="Foreground" Value="#666666" />
+    </Style>
+
     <!-- ── Custom tab strip ─────────────────────────────── -->
 
     <!-- Wrapper border for each workspace tab -->

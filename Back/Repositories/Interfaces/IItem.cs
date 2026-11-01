@@ -17,6 +17,7 @@ public interface IItem
 
     // User
     List<Item>? GetByCategory(int categoryId);
+    Item? GetByPosition(int categoryId, int sortOrder);
     int GetMaxSortOrderByCategory(int categoryId);
     List<Item>? GetFavs();
     

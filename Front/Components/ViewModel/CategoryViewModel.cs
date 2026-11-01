@@ -103,8 +103,8 @@ public class CategoryViewModel : ReactiveObject
         var items   = itemService.GetByCategory(category.Id);
 
         var lastCategory = categoryService.GetMaxValue(category.WorkspaceId);
-        CanMoveUp = Category.SortOrder > 1;
-        CanMoveDown = Category.SortOrder < lastCategory;
+        CanMoveUp = category.SortOrder > 1;
+        CanMoveDown = category.SortOrder < lastCategory;
 
         foreach (var item in items)
         {
