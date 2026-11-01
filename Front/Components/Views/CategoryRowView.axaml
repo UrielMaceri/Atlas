@@ -50,6 +50,9 @@
                             <PathIcon Data="M7.41,8.59 L12,13.17 L16.59,8.58 L18,10 L12,16 L6,10 Z"
                                       Width="22" Height="22"/>
                         </Button>
+                        <TextBlock Text="{Binding Description}"
+                                   FontWeight="Thin"
+                                   VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
@@ -59,12 +62,17 @@
                                  Classes="inline-rename"
                                  MinWidth="200"
                                  VerticalAlignment="Center"/>
-                        <Button Classes="action-button"
-                                Content="✓"
-                                Command="{Binding CommitRenameCategory}"/>
+                        <TextBox Text="{Binding EditingDescription}"
+                                 Classes="inline-rename"
+                                 MinWidth="200"
+                                 AcceptsReturn="True"
+                                 VerticalAlignment="Center"/>
                         <Button Classes="action-button"
                                 Content="✕"
                                 Command="{Binding CancelRenameCategory}"/>
+                        <Button Classes="action-button"
+                                Content="✓"
+                                Command="{Binding CommitRenameCategory}"/>
                     </StackPanel>
                 </StackPanel>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"

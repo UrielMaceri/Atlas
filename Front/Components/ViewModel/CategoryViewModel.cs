@@ -10,8 +10,10 @@ namespace Front;
 public class CategoryViewModel : ReactiveObject
 {
     private string _name;
+    private string _description;
     private bool _isEditingName;
     private string _editingName = string.Empty;
+    private string _editingDescription = string.Empty;
     private bool _canMoveUp;
     private bool _canMoveDown;
     private readonly Action<string>? _showNotification;
@@ -20,6 +22,12 @@ public class CategoryViewModel : ReactiveObject
     {
         get => _name;
         private set => this.RaiseAndSetIfChanged(ref _name, value);
+    }
+
+    public string Description
+    {
+        get => _description;
+        private set => this.RaiseAndSetIfChanged(ref _description, value);
     }
 
     public bool IsEditingName
@@ -32,6 +40,12 @@ public class CategoryViewModel : ReactiveObject
     {
         get => _editingName;
         set => this.RaiseAndSetIfChanged(ref _editingName, value);
+    }
+
+    public string EditingDescription
+    {
+        get => _editingDescription;
+        set => this.RaiseAndSetIfChanged(ref _editingDescription, value);
     }
 
     public bool CanMoveUp
@@ -81,6 +95,7 @@ public class CategoryViewModel : ReactiveObject
         _showNotification = showNotification;
         _parent  = parent;
         _name    = category.Name;
+        _description = category.Description;
 
         // Load this category's items from the DB
         var categoryService = App.Services.GetRequiredService<CategoryService>();
@@ -100,6 +115,7 @@ public class CategoryViewModel : ReactiveObject
         RenameCategory = new RelayCommand(() =>
         {
             EditingName = Name;
+            EditingDescription = Description;
             IsEditingName = true;
         });
 
@@ -119,12 +135,15 @@ public class CategoryViewModel : ReactiveObject
         {
             var trimmed = (EditingName ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(trimmed)) trimmed = Name;
+            var trimmedDescription = (EditingDescription ?? string.Empty).Trim();
 
-            categoryService.Update(Category.Id, trimmed, Category.Description ?? string.Empty);
+            categoryService.Update(Category.Id, trimmed, trimmedDescription);
 
             // Update local state and refresh parent list
             Category.Name = trimmed;
+            Category.Description = trimmedDescription;
             Name = trimmed;
+            Description = trimmedDescription;
             IsEditingName = false;
             _parent.LoadCategories(_parent.Workspace.Id);
         });
@@ -133,6 +152,7 @@ public class CategoryViewModel : ReactiveObject
         {
             IsEditingName = false;
             EditingName = Name;
+            EditingDescription = Description;
         });
 
         MoveUp = new RelayCommand(() =>

@@ -18,6 +18,22 @@ public partial class CategoryRowView : UserControl
         AddHandler(DragDrop.DragEnterEvent, OnItemEntered, handledEventsToo: true);
         AddHandler(DragDrop.DragOverEvent, OnItemOver, handledEventsToo: true);
         AddHandler(DragDrop.DragLeaveEvent, OnItemLeft, handledEventsToo: true);
+        AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (DataContext is not CategoryViewModel vm || !vm.IsEditingName)
+                return;
+
+            if (e.Key == Key.Enter && (e.KeyModifiers & KeyModifiers.Shift) == 0)
+            {
+                vm.CommitRenameCategory.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                vm.CancelRenameCategory.Execute(null);
+                e.Handled = true;
+            }
+        }, handledEventsToo: true);
     }
 
     public void SetDropOutlineVisible(bool isVisible)
